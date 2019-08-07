@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <stdio.h>
+#include <unistd.h>
 #include <unistd.h>
 
 #include "Eventloop.h"
@@ -22,7 +24,7 @@ private:
     Eventloop *loop_;
     channelMap channels_;
     int epollfd_;
-    typedef std::vector<struct epoll_events> eventList;
+    typedef std::vector<struct epoll_event> eventList;
     eventList revents_;
 
 public:
@@ -31,7 +33,7 @@ public:
     void loop(ChannelList *activeChannels_);
     void updateChannel(Channel *channel);
     void removeChannel(Channel *channel);
-    void fillactiveChannels(eventList revents_);
+    void fillactiveChannels(int eventnum, ChannelList *acticeChannels_);
     ~Poller();
 };
 
