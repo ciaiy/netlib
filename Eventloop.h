@@ -51,7 +51,7 @@ public:
     // 执行挂起函数
     void dopendingFunctor();
     // 加入挂起函数等待队列
-    void addInPendingFunctors()
+    void addInPendingFunctors(Functor cb);
 };
 
 

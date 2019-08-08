@@ -9,14 +9,14 @@ Eventloop::Eventloop()
         eventHandling(false),
         quit_(false),
         doingPendingFunctor(false),
-        poller_(Poller(this))
+        poller_(new Poller(this))
 {
     cout << "eventloop create" << endl;
 }
 
 Eventloop::~Eventloop() {}
 
-Eventloop::loop()
+void Eventloop::loop()
 {
     looping_ = true;
     quit_ = false;
@@ -24,7 +24,7 @@ Eventloop::loop()
     while (quit_) {
         // poll
         activeChannels_.clear();  
-        Poller.poll(&activeChannel);
+        poller_->poll(&activeChannels_);
 
         // event hand
         eventHandling = true;
@@ -40,16 +40,16 @@ Eventloop::loop()
     }
 }
 
-Eventloop::quit() {
-    quit = false;
+void Eventloop::quit() {
+    quit_ = false;
 }
 
-Eventloop::addInPendingFunctors(Functor cb) {
-    lock_guard lock;
+void Eventloop::addInPendingFunctors(Functor cb) {
+    lock_guard lock(mutex_);
     pendingFunctors_.push_back(std::move(cb));
 }
 
-Eventloop::dopendingFunctor() {
+void Eventloop::dopendingFunctor() {
     std::vector<Functor> functors;
     
     {
@@ -62,10 +62,10 @@ Eventloop::dopendingFunctor() {
     }
 }
 
-Eventloop::updateChannel(Channel *channel) {
-    poller_.updateChannel(channel);
+void Eventloop::updateChannel(Channel *channel) {
+    poller_->updateChannel(channel);
 }
 
-Eventloop::removeChannel(Channel *channel) {
-    poller_.removeChannel(channel);
+void Eventloop::removeChannel(Channel *channel) {
+    poller_->removeChannel(channel);
 }
