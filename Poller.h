@@ -30,10 +30,11 @@ private:
 public:
     int timeoutMs;
     Poller(Eventloop *loop_);
-    void loop(ChannelList *activeChannels_);
+    void poll(ChannelList *activeChannels_);
     void updateChannel(Channel *channel);
     void removeChannel(Channel *channel);
     void fillactiveChannels(int eventnum, ChannelList *acticeChannels_);
+    void update(int type, Channel *channel);
     ~Poller();
 };
 

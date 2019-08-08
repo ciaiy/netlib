@@ -26,7 +26,7 @@ Poller::~Poller()
     close(epollfd_);
 }
 
-void Poller::loop(ChannelList *activeChannels_)
+void Poller::poll(ChannelList *activeChannels_)
 {
     int eventnum = epoll_wait(epollfd_,
                               &*revents_.begin(),
@@ -53,7 +53,7 @@ void Poller::fillactiveChannels(int eventnum, ChannelList *activeChannels_)
     {
         Channel *channel = static_cast<Channel *>(revents_[i].data.ptr);
         int fd = channel->getFd();
-        channels_[fd]->setRevent(revents_[i].events);
+        channels_[fd]->setRevents(revents_[i].events);
         activeChannels_->push_back(channel);
     }
 }
@@ -61,14 +61,14 @@ void Poller::fillactiveChannels(int eventnum, ChannelList *activeChannels_)
 void Poller::updateChannel(Channel *channel)
 {
     // 未被epoll监听的channel（新的/被删除的）
-    if (channel->getIndex() == KNEW || channel->getIndex() == KDELETED)
+    if (channel->getStatus() == KNEW || channel->getStatus() == KDELETED)
     {
-        if (channel->getIndex() == KNEW)
+        if (channel->getStatus() == KNEW)
         {
             // 加入到channels_
             channels_[channel->getFd()] = channel;
         }
-        channel->setIndex = KADDED;
+        channel->setStatus = KADDED;
         update(EPOLL_CTL_ADD, channel);
     }
     else
@@ -77,7 +77,7 @@ void Poller::updateChannel(Channel *channel)
         {
             // 删除epoll监听事件
             update(EPOLL_CTL_DEL, channel);
-            channel->setIndex(KDELETED);
+            channel->setStatus(KDELETED);
         }
         else
         {
@@ -90,9 +90,9 @@ void Poller::updateChannel(Channel *channel)
 void Poller::removeChannel(Channel *channel)
 {
     // 从channels_中删除， 如果状态为已监听， 则删除epoll监听事件
-    channel->setIndex(KDELETED);
+    channel->setStatus(KDELETED);
     channels_.erase(channel->getFd());
-    if (channel->getIndex() == KADDED)
+    if (channel->getStatus() == KADDED)
     {
         update(EPOLL_CTL_DEL, channel);
     }
