@@ -1,5 +1,9 @@
 #include "Channel.h"
 
+void Channel::remove() {
+    loop_->removeChannel(this);
+}
+
 void Channel::handleEvent()
 {
     eventHanding_ = true;

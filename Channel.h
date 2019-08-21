@@ -46,6 +46,7 @@ public:
     Channel(Eventloop *loop, int fd);
     ~Channel();
     void handleEvent();
+    void remove();
 
     // 验证类函数
 
