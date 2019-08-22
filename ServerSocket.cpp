@@ -1,12 +1,16 @@
 #include "ServerSocket.h"
 #include "SocketOps.h"
 
+int ServerSocket::getsockfd() {
+    return sockfd_;
+}
+
 void ServerSocket::listen(int num)
 {
     socketopt::Listen(sockfd_, 1000);
 }
 
-int ServerSocket::accecpt()
+int ServerSocket::accept()
 {
     int ret_value = socketopt::Accept(sockfd_, (struct sockaddr *)&myaddr_, &addrlen_);
     return ret_value;

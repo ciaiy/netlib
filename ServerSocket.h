@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <string>
+#include <stdio.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
 
@@ -23,10 +24,11 @@ public:
     ServerSocket(int port, string address);
     void setNonblock();
     void listen(int num = 1000);  
-    int accecpt();  
+    int accept();  
     void setNonblock(bool set = true);
     void setKeepAlive(bool set);
     void setKeepAlive(int keepIdle, int keepInterval, int keepCount);
+    int getsockfd();
     ~ServerSocket();
 };
 
@@ -35,11 +37,21 @@ ServerSocket::ServerSocket(int port, string address) : port_(port) , address(add
     addrlen_ = sizeof(myaddr_);
     int ret_value = inet_pton(AF_INET, address.c_str(), &(myaddr_.sin_addr.s_addr));
     if(ret_value == -1) {
+        perror("inet_pton error");
         delete(this);
     }
    
     sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
-    bind(sockfd_, (struct sockaddr*)&myaddr_, addrlen_);
+    if(sockfd_ == -1) {
+        perror("socket error");
+        delete(this);
+    }
+    
+    ret_value = bind(sockfd_, (struct sockaddr*)&myaddr_, addrlen_);
+    if(ret_value == -1) {
+        perror("bind error");
+        delete(this);
+    } 
 }
 
 ServerSocket::~ServerSocket()
