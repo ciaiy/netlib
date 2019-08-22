@@ -1,5 +1,9 @@
 #include "Channel.h"
 
+void Channel::update() {
+    loop_->updateChannel(this);
+}
+
 void Channel::remove() {
     loop_->removeChannel(this);
 }

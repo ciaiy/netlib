@@ -12,6 +12,9 @@ namespace
 #define KDELETED 2
 #define KADDED 3
 
+#define EVENT_READ 1
+#define EVENT_WRITE 2
+
 typedef std::function<void()> readCallBack;
 typedef std::function<void()> writeCallBack;
 typedef std::function<void()> closeCallBack;
@@ -47,6 +50,34 @@ public:
     ~Channel();
     void handleEvent();
     void remove();
+    void update();
+
+    // 开关读写函数
+
+    void disableAll() {
+        events_ = 0;
+        update();
+    }
+
+    void enableRead() {
+        events_ |= EVENT_READ;
+        update();
+    }
+
+    void disableRead() {
+        events_ &= ~EVENT_READ;
+        update();
+    }
+
+    void enableWrite() {
+        events_ |= EVENT_WRITE;
+        update();
+    }
+
+    void disableWrite() {
+        events_ &= ~EVENT_WRITE;
+        update();
+    }
 
     // 验证类函数
 
