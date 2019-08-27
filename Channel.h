@@ -46,7 +46,14 @@ private:
     errorCallBack errorCallBack_;
 
 public:
-    Channel(Eventloop *loop, int fd);
+    Channel(Eventloop *loop, int fd)
+        : loop_(loop),
+          fd_(fd), 
+          revents_(0), 
+          events_(0) 
+    {
+    };
+    
     ~Channel();
     void handleEvent();
     void remove();
@@ -54,58 +61,70 @@ public:
 
     // 开关读写函数
 
-    void disableAll() {
+    void disableAll()
+    {
         events_ = 0;
         update();
     }
 
-    void enableRead() {
+    void enableRead()
+    {
         events_ |= EVENT_READ;
         update();
     }
 
-    void disableRead() {
+    void disableRead()
+    {
         events_ &= ~EVENT_READ;
         update();
     }
 
-    void enableWrite() {
+    void enableWrite()
+    {
         events_ |= EVENT_WRITE;
         update();
     }
 
-    void disableWrite() {
+    void disableWrite()
+    {
         events_ &= ~EVENT_WRITE;
         update();
     }
 
     // 验证类函数
 
-    bool isEventHanding() {
+    bool isEventHanding()
+    {
         return eventHanding_;
     }
 
-    bool isNoEvent() {
+    bool isNoEvent()
+    {
         return events_ == 0;
     }
 
     // get* 和 set* 函数
-    int getFd() {
+    int getFd()
+    {
         return fd_;
     }
-    int getStatus() {
+    int getStatus()
+    {
         return status_;
     }
 
-    void setStatus(int status) {
+    void setStatus(int status)
+    {
         status_ = status;
     }
 
-    unsigned int getEvents() {
+    unsigned int getEvents()
+    {
         return events_;
     }
 
-    void setRevents(unsigned int revents) {
+    void setRevents(unsigned int revents)
+    {
         revents_ = revents;
     }
 
