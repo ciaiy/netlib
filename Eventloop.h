@@ -9,6 +9,8 @@
 
 #include "Channel.h"
 #include "Poller.h"
+class Poller;
+class Channel;
 
 class Eventloop
 {
@@ -29,7 +31,7 @@ private:
     std::mutex mutex_;
 
     // 具体执行poll的Poller
-    std::unique_ptr<Poller> poller_;
+    Poller* poller_;
 
     // 当前活跃的Channels
     ChannelList activeChannels_;
@@ -39,6 +41,8 @@ private:
 public:
     Eventloop(/* args */);
     ~Eventloop();
+/* test */
+bool isLooping();
 
     // poller进行loop
     void loop();

@@ -1,6 +1,11 @@
 #include "Channel.h"
 
+/* debug */
+#include <iostream>
+
 void Channel::update() {
+/* debug */
+std::cout << "channel update... fd" << fd_ << std::endl;
     loop_->updateChannel(this);
 }
 

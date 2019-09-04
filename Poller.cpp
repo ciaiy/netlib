@@ -13,12 +13,20 @@ namespace
 Poller::Poller(Eventloop *loop_)
     : loop_(loop_),
       epollfd_(epoll_create1(EPOLL_CLOEXEC)),
-      timeoutMs(100)
+      timeoutMs(10000),
+      channels_()
 {
+    channels_[0] = nullptr;
+    cout<< "channels_[0] = 123" << endl;
+
     if (epollfd_ == -1)
     {
         perror("in Poller()");
     }
+    
+    
+    
+    
 }
 
 Poller::~Poller()
@@ -43,7 +51,7 @@ void Poller::poll(ChannelList *activeChannels_)
     }
     else
     {
-        cout << "无事件发生" << endl;
+        // cout << "无事件发生" << endl;
     }
 }
 
@@ -60,15 +68,24 @@ void Poller::fillactiveChannels(int eventnum, ChannelList *activeChannels_)
 
 void Poller::updateChannel(Channel *channel)
 {
+
+/* debug */
+cout<<"poller updatechannel >> status -> " << channel->getStatus() << "::" << endl;
     // 未被epoll监听的channel（新的/被删除的）
     if (channel->getStatus() == KNEW || channel->getStatus() == KDELETED)
     {
         if (channel->getStatus() == KNEW)
         {
             // 加入到channels_
-            channels_[channel->getFd()] = channel;
+/* debug */
+cout<<"poller add channels_ fd:"<<channel->getFd() << &channels_   << ")))"<< endl;
+
+    cout<< "epollfd " << endl ;
+    cout << this->epollfd_ <<"next" <<endl;
+            this->channels_[channel->getFd()] = channel;
+cout<<"poller add channels finished" << endl;
         }
-        channel->setStatus = KADDED;
+        channel->setStatus(KADDED);
         update(EPOLL_CTL_ADD, channel);
     }
     else

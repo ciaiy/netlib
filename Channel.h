@@ -6,6 +6,9 @@
 
 #include "Eventloop.h"
 
+/* debug */
+#include <iostream>
+
 namespace
 {
 #define KNEW 1
@@ -21,7 +24,7 @@ typedef std::function<void()> closeCallBack;
 typedef std::function<void()> errorCallBack;
 
 } // namespace
-
+class Eventloop;
 class Channel
 {
 private:
@@ -48,16 +51,25 @@ private:
 public:
     Channel(Eventloop *loop, int fd)
         : loop_(loop),
-          fd_(fd), 
-          revents_(0), 
-          events_(0) 
-    {
-    };
-    
-    ~Channel();
+          fd_(fd),
+          revents_(0),
+          events_(0), 
+          status_(KNEW){std::cout<<" channel construct : " << fd_ << std::endl;};
+
+    ~Channel() {}
     void handleEvent();
     void remove();
     void update();
+
+    bool isReading()
+    {
+        return status_ & EVENT_READ;
+    }
+
+    bool isWriting()
+    {
+        return status_ & EVENT_WRITE;
+    }
 
     // 开关读写函数
 

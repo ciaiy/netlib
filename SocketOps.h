@@ -9,6 +9,27 @@
 
 namespace socketopt
 {
+
+int write(int sockfd, char *buf, int len) {
+    return write(sockfd, buf, len);
+}
+
+void setReusePort(int sockfd, bool set) {
+    int optval = set ? 1 : 0;
+    int ret_value = setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval));
+    if(ret_value == -1) {
+        perror("set reuse port error");
+    }
+}
+
+void setReuseAddr(int sockfd, bool set) {
+    int optval = set ? 1 : 0;
+    int ret_value = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+    if(ret_value == -1) {
+        perror("set reuse addr error");
+    }
+}
+
 void Listen(int sockfd, int num)
 {
     int ret_value = listen(sockfd, num);
@@ -62,28 +83,9 @@ void setNonblock(int sockfd_, bool set)
     fcntl(sockfd_, F_SETFL, flag);
 }
 
-void closeKeepAlive(int sockfd) {
-    int keepAlive = 0;
-    setsockopt(sockfd, SOL_SOCKET, SO_KEEPALIVE, (void *)&keepAlive, sizeof(keepAlive));
-}
-
-void setKeepAlive(int sockfd, int keepIdle, int keepInterval, int keepCount) {
-    int idle = keepIdle;
-    int interval = keepInterval;
-    int count = keepCount;
-    int ret_value = 0;
-    ret_value = setsockopt(sockfd, SOL_TCP, TCP_KEEPIDLE, (void *)&idle, sizeof(idle));
-    if(ret_value == -1) {
-        perror("set keep-alive idle error");
-    }
-    ret_value = setsockopt(sockfd, SOL_TCP, TCP_KEEPINTVL, (void *)&interval, sizeof(interval));
-    if(ret_value == -1) {
-        perror("set keep-alive interval error");
-    }
-    ret_value = setsockopt(sockfd, SOL_TCP, TCP_KEEPCNT, (void *)&count, sizeof(count));
-    if(ret_value == -1) {
-        perror("set keep-alive count error");
-    }
+void setKeepAlive(int sockfd, bool set) {
+    int optval = set ? 1 : 0;
+    setsockopt(sockfd, SOL_SOCKET, SO_KEEPALIVE, &optval, static_cast<socklen_t>(sizeof optval));
 }
 
 };     // namespace socketopt
