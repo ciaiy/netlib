@@ -1,4 +1,13 @@
 #include "TcpConnection.h"
+#include "CallBacks.h"
+
+void TcpConnection::setConnectionStatus(int status){
+    connectionStatus = status;
+}
+
+void TcpConnection::handleError() {
+    perror("handle error :");
+}
 
 void TcpConnection::shutdown() {
     setConnectionStatus(KDisconnected);

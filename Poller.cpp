@@ -1,5 +1,4 @@
 #include "Poller.h"
-
 using std::cout;
 using std::endl;
 
@@ -13,8 +12,9 @@ namespace
 Poller::Poller(Eventloop *loop_)
     : loop_(loop_),
       epollfd_(epoll_create1(EPOLL_CLOEXEC)),
-      timeoutMs(10000),
-      channels_()
+      timeoutMs(100),
+      channels_(),
+      revents_(100)
 {
     channels_[0] = nullptr;
     cout<< "channels_[0] = 123" << endl;
@@ -37,9 +37,12 @@ Poller::~Poller()
 void Poller::poll(ChannelList *activeChannels_)
 {
     int eventnum = epoll_wait(epollfd_,
-                              &*revents_.begin(),
+                              &(*revents_.begin()),
                               static_cast<int>(revents_.size()),
                               timeoutMs);
+    if(eventnum == -1) {
+        perror("epoll_wait error");
+    }
     if (eventnum > 0)
     {
         cout << "有" << eventnum << "个事件发生" << endl;
@@ -79,9 +82,6 @@ cout<<"poller updatechannel >> status -> " << channel->getStatus() << "::" << en
             // 加入到channels_
 /* debug */
 cout<<"poller add channels_ fd:"<<channel->getFd() << &channels_   << ")))"<< endl;
-
-    cout<< "epollfd " << endl ;
-    cout << this->epollfd_ <<"next" <<endl;
             this->channels_[channel->getFd()] = channel;
 cout<<"poller add channels finished" << endl;
         }
@@ -117,8 +117,13 @@ void Poller::removeChannel(Channel *channel)
 
 void Poller::update(int type, Channel *channel)
 {
+/* debug */
+cout<<"poller::update type :" << type << "fd : "<<channel->getFd()<<endl;
     struct epoll_event ev = {0};
     ev.events = channel->getEvents();
     ev.data.ptr = static_cast<void *>(channel);
-    epoll_ctl(epollfd_, type, channel->getFd(), &ev);
+    int ret_value = epoll_ctl(epollfd_, type, channel->getFd(), &ev);
+    if(ret_value == -1) {
+        perror("poller::update epoll_ctl error");
+    }
 }

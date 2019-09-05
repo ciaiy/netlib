@@ -37,19 +37,19 @@ private:
     /* 错误回调函数 */
     errorCallBack errorCallBack_;
 
-    void setConnectionStatus(int status);
-    void connectEstablished();
     void handleRead();
     void handleWrite();
-    void handleError();
     void handleClose();
 
     void shutdown();
     void send(char *buf, int len);
 
 public:
+    void setConnectionStatus(int status);
+    void connectEstablished();
+    void handleError();
     TcpConnection(Eventloop *loop, int sockfd);
-    ~TcpConnection();
+    ~TcpConnection(){};
 
     int getConnectionStatus()
     {
@@ -105,8 +105,6 @@ namespace
 #define KConnecting 3
 }; // namespace
 
-TcpConnection::~TcpConnection()
-{
-}
+
 
 #endif

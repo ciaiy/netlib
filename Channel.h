@@ -22,8 +22,8 @@ typedef std::function<void()> readCallBack;
 typedef std::function<void()> writeCallBack;
 typedef std::function<void()> closeCallBack;
 typedef std::function<void()> errorCallBack;
-
 } // namespace
+
 class Eventloop;
 class Channel
 {
@@ -53,8 +53,10 @@ public:
         : loop_(loop),
           fd_(fd),
           revents_(0),
-          events_(0), 
-          status_(KNEW){std::cout<<" channel construct : " << fd_ << std::endl;};
+          events_(0),
+          status_(KNEW)
+    {
+    };
 
     ~Channel() {}
     void handleEvent();
@@ -63,12 +65,12 @@ public:
 
     bool isReading()
     {
-        return status_ & EVENT_READ;
+        return status_ & EPOLLIN;
     }
 
     bool isWriting()
     {
-        return status_ & EVENT_WRITE;
+        return status_ & EPOLLOUT;
     }
 
     // 开关读写函数
@@ -81,25 +83,25 @@ public:
 
     void enableRead()
     {
-        events_ |= EVENT_READ;
+        events_ |= EPOLLIN;
         update();
     }
 
     void disableRead()
     {
-        events_ &= ~EVENT_READ;
+        events_ &= ~EPOLLIN;
         update();
     }
 
     void enableWrite()
     {
-        events_ |= EVENT_WRITE;
+        events_ |= EPOLLOUT;
         update();
     }
 
     void disableWrite()
     {
-        events_ &= ~EVENT_WRITE;
+        events_ &= ~EPOLLOUT;
         update();
     }
 

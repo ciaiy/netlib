@@ -3,12 +3,14 @@
 
 #include "Poller.h"
 #include "Acceptor.h"
-#include "TcpConnection.h"
 #include "CallBacks.h"
+#include "TcpConnection.h"
 
 #include <map>
 #include <iostream>
 #include <functional>
+
+class TcpConnection;
 
 namespace {
     typedef std::function<void (int newconfd)> newConnectionCallBack;

@@ -11,7 +11,6 @@ void Server::newConnection(int sockfd) {
 }
 
 void Server::start() {
-    loop_.updateChannel(accpetor_.getChannel());
     loop_.loop();
 }
 

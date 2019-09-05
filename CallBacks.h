@@ -13,29 +13,10 @@ typedef std::function<void(const TcpConnectionPtr &)> ClosingCallBack;
 typedef std::function<void(const TcpConnectionPtr &)> ReadCompleteCallBack;
 typedef std::function<void(const TcpConnectionPtr &)> WriteCompleteCallBack;
 
-void defalutConnectionStatusCallBack(const TcpConnectionPtr &con)
-{
-    std::cout << "connection status changed : " << std::endl;
-}
-
-void defaultClosingCallBack(const TcpConnectionPtr &con)
-{
-    std::cout << "connection closing" << std::endl;
-}
-
-void defaultReadCompleteCallBack(const TcpConnectionPtr &con)
-{
-    std::cout << "connection read finished" << std::endl;
-}
-
-void defaultWriteCompleteCallBack(const TcpConnectionPtr &con)
-{
-    std::cout << "connection write finished" << std::endl;
-}
-
-void defaultErrorCallBack()
-{
-    perror("connection error : ");
-}
+void defalutConnectionStatusCallBack(const TcpConnectionPtr &con);
+void defaultClosingCallBack(const TcpConnectionPtr &con);
+void defaultReadCompleteCallBack(const TcpConnectionPtr &con);
+void defaultWriteCompleteCallBack(const TcpConnectionPtr &con);
+void defaultErrorCallBack();
 
 #endif // CALLBACKS_H
