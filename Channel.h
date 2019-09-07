@@ -85,8 +85,10 @@ public:
 
     void enableRead()
     {
+        log(DEBUG, "Channel", __LINE__, "enableRead begin");
         events_ |= EPOLLIN;
         update();
+        log(DEBUG, "Channel", __LINE__, "enableRead end");
     }
 
     void disableRead()

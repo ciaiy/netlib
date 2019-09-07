@@ -3,14 +3,16 @@
 
 #include "Poller.h"
 #include "Acceptor.h"
-#include "CallBacks.h"
 #include "TcpConnection.h"
+#include "defaultCallBacks.h"
+#include "logger.h"
 
 #include <map>
 #include <iostream>
 #include <functional>
 
 class TcpConnection;
+class Acceptor;
 
 namespace {
     typedef std::function<void (int newconfd)> newConnectionCallBack;
@@ -20,8 +22,8 @@ class Server
 {
 private:
     /* data */
-    Acceptor accpetor_;
     Eventloop loop_;
+    Acceptor accpetor_;
 
     std::map<int, TcpConnection*> TcpConnections_;
 public:

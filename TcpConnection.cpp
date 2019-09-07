@@ -83,6 +83,7 @@ void TcpConnection::send(char *buf, int len)
 
 void TcpConnection::handleRead()
 {
+    log(DEBUG, "TcpConnection", __LINE__, "handleRead");
     int read_num = readBuffer_.readFd(socket_.getSockfd());
     if (read_num > 0)
     {

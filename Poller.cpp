@@ -59,6 +59,7 @@ void Poller::fillactiveChannels(int eventnum, ChannelList *activeChannels_)
 {
     for (int i = 0; i < eventnum; i++)
     {
+        printf("type : DEBUG - revent[%d]:%d\n", i,revents_[i].events);
         Channel *channel = static_cast<Channel *>(revents_[i].data.ptr);
         int fd = channel->getFd();
         channels_[fd]->setRevents(revents_[i].events);
@@ -90,8 +91,8 @@ void Poller::updateChannel(Channel *channel)
         }
         else
         {
-            // 修改epoll监听事件
             update(EPOLL_CTL_MOD, channel);
+
         }
     }
 }
@@ -109,6 +110,7 @@ void Poller::removeChannel(Channel *channel)
 
 void Poller::update(int type, Channel *channel)
 {
+    printf("type : DEBUG - channel.sockfd = %d - channel.events = %d\n", channel->getFd(), channel->getEvents());
     struct epoll_event ev = {0};
     ev.events = channel->getEvents();
     ev.data.ptr = static_cast<void *>(channel);

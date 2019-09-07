@@ -15,11 +15,13 @@ void Channel::remove() {
 
 void Channel::handleEvent()
 {
+    log(DEBUG, "Channel", __LINE__, "handleEvent begin");
     eventHanding_ = true;
     // 关闭连接
     // 等待验证是否为 !(revents_&EPOLLIN)
-    if (revents_ & EPOLLHUP && !(revents_ & EPOLLIN))
+    if (revents_ & EPOLLRDHUP)
     {
+    log(DEBUG, "Channel", __LINE__, "handleEvent:closeCallBacks");
         if (closeCallBack_)
         {
             closeCallBack_();
@@ -27,7 +29,8 @@ void Channel::handleEvent()
     }
 
     // 读数据到来
-    if(revents_ & (EPOLLIN | EPOLLPRI | EPOLLRDHUP)) {
+    if(revents_ & (EPOLLIN | EPOLLPRI)) {
+    log(DEBUG, "Channel", __LINE__, "handleEvent:readCallBacks");
         if(readCallBack_) {
             readCallBack_();
         }
@@ -35,6 +38,7 @@ void Channel::handleEvent()
 
     // 写数据到来
     if(revents_ & (EPOLLOUT)) {
+    log(DEBUG, "Channel", __LINE__, "handleEvent:ReadCallBacks");
         if(writeCallBack_) {
             writeCallBack_();
         }
@@ -42,6 +46,7 @@ void Channel::handleEvent()
 
     // 出错
     if(revents_ & EPOLLERR) {
+    log(DEBUG, "Channel", __LINE__, "handleEvent:ErrorCallBacks");
         if(errorCallBack_) {
             errorCallBack_();
         }
