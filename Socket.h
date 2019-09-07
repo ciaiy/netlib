@@ -9,6 +9,8 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 
+#include "logger.h"
+
 using std::string;
 
 class Socket

@@ -4,9 +4,9 @@
 #include <iostream>
 
 void Channel::update() {
-/* debug */
-std::cout << "channel update... fd" << fd_ << std::endl;
+log(DEBUG, "channel", __LINE__, "update begin");
     loop_->updateChannel(this);
+log(DEBUG, "channel", __LINE__, "update end");
 }
 
 void Channel::remove() {

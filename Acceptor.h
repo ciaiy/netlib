@@ -3,6 +3,7 @@
 
 #include "Socket.h"
 #include "Channel.h"
+#include "logger.h"
 
 #include <functional>
 #include <iostream>

@@ -16,9 +16,6 @@ Poller::Poller(Eventloop *loop_)
       channels_(),
       revents_(100)
 {
-    channels_[0] = nullptr;
-    cout<< "channels_[0] = 123" << endl;
-
     if (epollfd_ == -1)
     {
         perror("in Poller()");
@@ -72,18 +69,13 @@ void Poller::fillactiveChannels(int eventnum, ChannelList *activeChannels_)
 void Poller::updateChannel(Channel *channel)
 {
 
-/* debug */
-cout<<"poller updatechannel >> status -> " << channel->getStatus() << "::" << endl;
     // 未被epoll监听的channel（新的/被删除的）
     if (channel->getStatus() == KNEW || channel->getStatus() == KDELETED)
     {
         if (channel->getStatus() == KNEW)
         {
             // 加入到channels_
-/* debug */
-cout<<"poller add channels_ fd:"<<channel->getFd() << &channels_   << ")))"<< endl;
             this->channels_[channel->getFd()] = channel;
-cout<<"poller add channels finished" << endl;
         }
         channel->setStatus(KADDED);
         update(EPOLL_CTL_ADD, channel);
@@ -117,13 +109,12 @@ void Poller::removeChannel(Channel *channel)
 
 void Poller::update(int type, Channel *channel)
 {
-/* debug */
-cout<<"poller::update type :" << type << "fd : "<<channel->getFd()<<endl;
     struct epoll_event ev = {0};
     ev.events = channel->getEvents();
     ev.data.ptr = static_cast<void *>(channel);
     int ret_value = epoll_ctl(epollfd_, type, channel->getFd(), &ev);
     if(ret_value == -1) {
-        perror("poller::update epoll_ctl error");
+        log(ERROR, "Poller", __LINE__, "error");
+        perror("epoll_ctl");
     }
 }

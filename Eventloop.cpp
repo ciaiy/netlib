@@ -13,7 +13,7 @@ Eventloop::Eventloop()
 {
 /*debug*/
  poller_->getchannels()[123] = nullptr;
-    cout << "eventloop create" << endl;
+log(DEBUG, "Eventloop", __LINE__, "constructor complete");
 }
 
 Eventloop::~Eventloop() {}
@@ -65,11 +65,9 @@ void Eventloop::dopendingFunctor() {
 }
 
 void Eventloop::updateChannel(Channel *channel) {
-/* debug */
-cout<<"loop update..." <<endl;
+log(DEBUG, "Eventloop", __LINE__, "updateChannel begin");
     poller_->updateChannel(channel);
-/* debug */
-    cout<<"has updated " << endl;
+log(DEBUG, "Eventloop", __LINE__, "updateChannel end");
 }
 
 void Eventloop::removeChannel(Channel *channel) {

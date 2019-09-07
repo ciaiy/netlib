@@ -1,9 +1,8 @@
 #include "Acceptor.h"
 
 void Acceptor::handleRead()
-{
+{   
     int newconfd = socket_.accept();
-
     if (newconfd != -1)
     {
         if (newConnectionCallBack_)
@@ -30,9 +29,7 @@ Acceptor::Acceptor(Eventloop *loop, int port, string address)
       channel_(loop_, socket_.getSockfd()),
       socket_(port, address)
 {
-/* debug */   
-std::cout<<loop_->isLooping()<< std::endl;
-std::cout<<"appceptor construct start"<<std::endl;
+    log(DEBUG, "acceptor", __LINE__, "constructor start");
     idlefd = open("/dev/null", O_RDONLY);
     if(idlefd == -1) {
         perror("idlefd open error");
@@ -40,6 +37,7 @@ std::cout<<"appceptor construct start"<<std::endl;
     socket_.listen();
     channel_.setReadCallBack(std::bind(&Acceptor::handleRead, this));
     channel_.enableRead();
+    log(DEBUG, "acceptor", __LINE__, "constructor end");
 }
 
 Acceptor::~Acceptor()

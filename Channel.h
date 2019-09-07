@@ -5,6 +5,7 @@
 #include <sys/epoll.h>
 
 #include "Eventloop.h"
+#include "logger.h"
 
 /* debug */
 #include <iostream>
@@ -56,6 +57,7 @@ public:
           events_(0),
           status_(KNEW)
     {
+        log(DEBUG, "channel", __LINE__, "constructor complete");
     };
 
     ~Channel() {}

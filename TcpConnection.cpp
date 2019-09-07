@@ -1,15 +1,18 @@
 #include "TcpConnection.h"
 #include "CallBacks.h"
 
-void TcpConnection::setConnectionStatus(int status){
+void TcpConnection::setConnectionStatus(int status)
+{
     connectionStatus = status;
 }
 
-void TcpConnection::handleError() {
+void TcpConnection::handleError()
+{
     perror("handle error :");
 }
 
-void TcpConnection::shutdown() {
+void TcpConnection::shutdown()
+{
     setConnectionStatus(KDisconnected);
     channel_.disableAll();
     connectionStatusCallBack_(shared_from_this());
@@ -21,7 +24,7 @@ void TcpConnection::handleWrite()
     if (channel_.isReading())
     {
         int write_num = socket_.write(writeBuffer_.peek(), writeBuffer_.readableBytes());
-        
+
         if (writeBuffer_.readableBytes() > 0)
         {
             writeBuffer_.hasRead(write_num);
@@ -108,6 +111,7 @@ TcpConnection::TcpConnection(Eventloop *loop, int sockfd) : loop_(loop),
                                                             socket_(sockfd),
                                                             channel_(loop_, socket_.getSockfd())
 {
+    log(DEBUG, "TcpConnection", __LINE__, "constructor begin");
     channel_.setCloseCallBack(
         std::bind(&TcpConnection::handleClose, this));
     channel_.setErrorCallBack(
@@ -116,15 +120,20 @@ TcpConnection::TcpConnection(Eventloop *loop, int sockfd) : loop_(loop),
         std::bind(&TcpConnection::handleRead, this));
     channel_.setWriteCallBack(
         std::bind(&TcpConnection::handleWrite, this));
-
+    log(DEBUG, "TcpConnection", __LINE__, "channel set*CallBack complete");
     socket_.setKeepAlive(true);
-
     connectEstablished();
+    log(DEBUG, "TcpConnection", __LINE__, "constructor end");
 }
 
 void TcpConnection::connectEstablished()
 {
+    log(DEBUG, "TcpConnection", __LINE__, "connectionEstablished begin");
     setConnectionStatus(KConnected);
     channel_.enableRead();
+    if(connectionStatusCallBack_) {
     connectionStatusCallBack_(shared_from_this());
+    }
+    log(DEBUG, "TcpConnection", __LINE__, "connectionEstablished end");
+
 }

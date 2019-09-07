@@ -1,0 +1,4 @@
+testTcpConnection : ../Channel.* ../Socket.* ../Poller.* ../Eventloop.* ../Buffer.* ../TcpConnection.* testTcpConnection.cpp ../logger.* 
+	g++ ../Channel.* ../Socket.* ../Poller.* ../Eventloop.* ../Buffer.* ../TcpConnection.* testTcpConnection.cpp ../logger.* -o testTcpConnection
+testServer :   ../Acceptor.* ../Channel.* ../Socket.* ../Poller.* ../Eventloop.* ../Buffer.* ../TcpConnection.* testServer.cpp ../logger.* ../Server.* ../defaultCallBacks.*
+	g++ ../Channel.* ../Acceptor.* ../Socket.* ../Poller.* ../Eventloop.* ../Buffer.* ../TcpConnection.* testServer.cpp ../logger.* ../Server.* ../defaultCallBacks.* -o testServer

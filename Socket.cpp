@@ -51,6 +51,7 @@ Socket::Socket(int sockfd)
 
 Socket::Socket(int port, string address) : port_(port), address(address)
 {
+    log(DEBUG, "Socket", __LINE__, "constructor begin");
     addrlen_ = sizeof(myaddr_);
     myaddr_.sin_family = AF_INET;
     myaddr_.sin_port= htons(port);
@@ -68,15 +69,13 @@ Socket::Socket(int port, string address) : port_(port), address(address)
         perror("socket error");
         delete (this);
     }
-/* debug */
-    std::cout << "socket :: " << sockfd_ << std::endl;
-
     ret_value = bind(sockfd_, (struct sockaddr *)&myaddr_, addrlen_);
     if (ret_value == -1)
     {
         perror("bind error");
         delete (this);
     }
+    log(DEBUG, "Socket", __LINE__, "constructor end");
 }
 
 Socket::~Socket()

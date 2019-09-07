@@ -18,5 +18,6 @@ int main(void) {
     char msg[100] = "hello,world";
     int write_num = write(sockfd, msg, 100);  
     printf("write %d bytes\n", write_num);
+    sleep(1000);
     return 0;
 }
