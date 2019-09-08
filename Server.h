@@ -25,7 +25,7 @@ private:
     Eventloop loop_;
     Acceptor accpetor_;
 
-    std::map<int, TcpConnection*> TcpConnections_;
+    std::map<int, TcpConnectionPtr> TcpConnections_;
 public:
     Server(int port, char *address);
     void setNewConnectionCallBack(newConnectionCallBack cb);

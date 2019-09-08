@@ -85,9 +85,15 @@ void TcpConnection::handleRead()
 {
     log(DEBUG, "TcpConnection", __LINE__, "handleRead");
     int read_num = readBuffer_.readFd(socket_.getSockfd());
+    printf("type : DEBUG - read_num = %d\n", read_num);
     if (read_num > 0)
     {
-        readCompleteCallBack_(shared_from_this());
+        log(DEBUG, "TcpConnection", __LINE__, "readCompleteCallBacks begin");
+        if (readCompleteCallBack_)
+        {
+            readCompleteCallBack_(shared_from_this());
+        }
+        log(DEBUG, "TcpConnection", __LINE__, "readCompleteCallBacks end");
     }
     else if (read_num < 0)
     {
@@ -132,9 +138,9 @@ void TcpConnection::connectEstablished()
     log(DEBUG, "TcpConnection", __LINE__, "connectionEstablished begin");
     setConnectionStatus(KConnected);
     channel_.enableRead();
-    if(connectionStatusCallBack_) {
-    connectionStatusCallBack_(shared_from_this());
+    if (connectionStatusCallBack_)
+    {
+        connectionStatusCallBack_(shared_from_this());
     }
     log(DEBUG, "TcpConnection", __LINE__, "connectionEstablished end");
-
 }

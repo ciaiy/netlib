@@ -27,6 +27,7 @@ void Channel::handleEvent()
         {
             closeCallBack_();
         }
+        return ;
     }
 
     // 读数据到来
@@ -35,6 +36,7 @@ void Channel::handleEvent()
         if(readCallBack_) {
             readCallBack_();
         }
+        return ;
     }
 
     // 写数据到来
@@ -43,6 +45,7 @@ void Channel::handleEvent()
         if(writeCallBack_) {
             writeCallBack_();
         }
+        return ;
     }
 
     // 出错
@@ -51,6 +54,7 @@ void Channel::handleEvent()
         if(errorCallBack_) {
             errorCallBack_();
         }
+        return ;
     }
 
     eventHanding_ = false;

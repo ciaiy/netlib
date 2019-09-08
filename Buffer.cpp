@@ -39,6 +39,8 @@ int Buffer::readFd(int fd)
         writeIndex_ = buffer_.size();
         append(extraBuf, read_num - writable_);
     }
+
+    return read_num;
 }
 
 char *Buffer::begin()

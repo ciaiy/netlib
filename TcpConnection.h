@@ -63,27 +63,27 @@ public:
 
     void setReadCompleteCallBack(ReadCompleteCallBack cb)
     {
-        std::bind(readCompleteCallBack_, cb);
+        readCompleteCallBack_ = std::move(cb);
     }
 
     void setWriteCompleteCallBack(WriteCompleteCallBack cb)
     {
-        std::bind(writeCompleteCallBack_, cb);
+        writeCompleteCallBack_ = std::move(cb);
     }
 
     void setClosingCallBack(ClosingCallBack cb)
     {
-        std::bind(closingCallBack_, cb);
+        closingCallBack_ = std::move(cb);
     }
 
     void setConnectionStatusCallBack(ConnectionStatusCallBack cb)
     {
-        std::bind(connectionStatusCallBack_, cb);
+        connectionStatusCallBack_ = std::move(cb);
     }
 
     void setErrorCallBack(errorCallBack cb)
     {
-        std::bind(errorCallBack_, cb);
+        errorCallBack_ = std::move(cb);
     }
 
     bool reading()

@@ -3,7 +3,7 @@
 void Server::newConnection(int sockfd) {
     log(DEBUG, "Server", __LINE__, "newConnection begin");
     printf("\t newconfd = %d\n", sockfd);
-    TcpConnection *newconn = new TcpConnection(&loop_, sockfd);
+    TcpConnectionPtr newconn = std::shared_ptr<TcpConnection>(new TcpConnection(&loop_, sockfd));
     log(DEBUG, "Server", __LINE__, "test write begin");
     char msg[10] = "123"; 
     int ret_value = write(sockfd, msg, 10);
@@ -12,11 +12,11 @@ void Server::newConnection(int sockfd) {
         exit(-1);
     }
     log(DEBUG, "Server", __LINE__, "test write end");
-    newconn->setClosingCallBack(defaultClosingCallBack);
-    newconn->setConnectionStatusCallBack(defalutConnectionStatusCallBack);
-    newconn->setErrorCallBack(defaultErrorCallBack);
-    newconn->setReadCompleteCallBack(defaultReadCompleteCallBack);
-    newconn->setWriteCompleteCallBack(defaultWriteCompleteCallBack);
+    newconn->setClosingCallBack(std::bind(&defaultClosingCallBack, std::placeholders::_1));
+    newconn->setConnectionStatusCallBack(std::bind(&defalutConnectionStatusCallBack, std::placeholders::_1));
+    newconn->setErrorCallBack(std::bind(&defaultErrorCallBack));
+    newconn->setReadCompleteCallBack(std::bind(&defaultReadCompleteCallBack, std::placeholders::_1));
+    newconn->setWriteCompleteCallBack(std::bind(&defaultWriteCompleteCallBack, std::placeholders::_1));
     TcpConnections_[newconn->getSockfd()] = newconn;
     log(DEBUG, "Server", __LINE__, "newConnection end");
 }
