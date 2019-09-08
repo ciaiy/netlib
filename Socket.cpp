@@ -41,12 +41,7 @@ void Socket::setKeepAlive(bool set)
 
 Socket::Socket(int sockfd)
 {
-    sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd_ == -1)
-    {
-        perror("socket error");
-        delete (this);
-    }
+    sockfd_ = sockfd;
 }
 
 Socket::Socket(int port, string address) : port_(port), address(address)

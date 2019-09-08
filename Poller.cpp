@@ -59,7 +59,7 @@ void Poller::fillactiveChannels(int eventnum, ChannelList *activeChannels_)
 {
     for (int i = 0; i < eventnum; i++)
     {
-        printf("type : DEBUG - revent[%d]:%d\n", i,revents_[i].events);
+        printf("type : DEBUG - revent[%d]:sockfd%d:%d\n", i,((Channel *)revents_[i].data.ptr)->getFd() ,revents_[i].events);
         Channel *channel = static_cast<Channel *>(revents_[i].data.ptr);
         int fd = channel->getFd();
         channels_[fd]->setRevents(revents_[i].events);
@@ -75,6 +75,8 @@ void Poller::updateChannel(Channel *channel)
     {
         if (channel->getStatus() == KNEW)
         {
+            log(DEBUG, "Poller", __LINE__, "已加入channels");
+            printf("\t channel fd = %d\n", channel->getFd());
             // 加入到channels_
             this->channels_[channel->getFd()] = channel;
         }

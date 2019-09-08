@@ -60,7 +60,7 @@ public:
         log(DEBUG, "channel", __LINE__, "constructor complete");
     };
 
-    ~Channel() {}
+    ~Channel() {log(DEBUG, "channel", __LINE__, "destructor complete");}
     void handleEvent();
     void remove();
     void update();

@@ -3,6 +3,7 @@
 void Acceptor::handleRead()
 {   
     int newconfd = socket_.accept();
+    printf("type : DEBUG - newconfd = %d\n", newconfd);
     if (newconfd != -1)
     {
         if (newConnectionCallBack_)

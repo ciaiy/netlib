@@ -19,8 +19,9 @@ void Channel::handleEvent()
     eventHanding_ = true;
     // 关闭连接
     // 等待验证是否为 !(revents_&EPOLLIN)
-    if (revents_ & EPOLLRDHUP)
+    if ((revents_ & EPOLLHUP ) || (revents_ & EPOLLRDHUP))
     {
+
     log(DEBUG, "Channel", __LINE__, "handleEvent:closeCallBacks");
         if (closeCallBack_)
         {
