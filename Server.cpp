@@ -5,13 +5,6 @@ void Server::newConnection(int sockfd) {
     printf("\t newconfd = %d\n", sockfd);
     TcpConnectionPtr newconn = std::shared_ptr<TcpConnection>(new TcpConnection(&loop_, sockfd));
     log(DEBUG, "Server", __LINE__, "test write begin");
-    char msg[10] = "123"; 
-    int ret_value = write(sockfd, msg, 10);
-    if(ret_value == -1) {
-        perror("write error");
-        exit(-1);
-    }
-    log(DEBUG, "Server", __LINE__, "test write end");
     newconn->setClosingCallBack(std::bind(&defaultClosingCallBack, std::placeholders::_1));
     newconn->setConnectionStatusCallBack(std::bind(&defalutConnectionStatusCallBack, std::placeholders::_1));
     newconn->setErrorCallBack(std::bind(&defaultErrorCallBack));
