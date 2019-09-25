@@ -24,12 +24,18 @@ private:
     /* data */
     Eventloop loop_;
     Acceptor accpetor_;
+    ReadCompleteCallBack readCompleteCallBack_;
+    ClosingCallBack closingCallBack_;
+    ConnectionStatusCallBack connectionStatusCallBack_;
+    WriteCompleteCallBack writeCompleteCallBack_;
+    errorCallBack errorCallBack_;
 
     std::map<int, TcpConnectionPtr> TcpConnections_;
 public:
     Server(int port, char *address);
-    void setNewConnectionCallBack(newConnectionCallBack cb);
+    // void setNewConnectionCallBack(newConnectionCallBack cb);
     void newConnection(int sockfd);
+    void removeConnection(TcpConnectionPtr Connection);
     void start();
     ~Server();
 };

@@ -1,31 +1,49 @@
 #include "Server.h"
 
-void Server::newConnection(int sockfd) {
-    log(DEBUG, "Server", __LINE__, "newConnection begin");
-    printf("\t newconfd = %d\n", sockfd);
-    TcpConnectionPtr newconn = std::shared_ptr<TcpConnection>(new TcpConnection(&loop_, sockfd));
-    log(DEBUG, "Server", __LINE__, "test write begin");
-    newconn->setClosingCallBack(std::bind(&defaultClosingCallBack, std::placeholders::_1));
-    newconn->setConnectionStatusCallBack(std::bind(&defalutConnectionStatusCallBack, std::placeholders::_1));
-    newconn->setErrorCallBack(std::bind(&defaultErrorCallBack));
-    newconn->setReadCompleteCallBack(std::bind(&defaultReadCompleteCallBack, std::placeholders::_1));
-    newconn->setWriteCompleteCallBack(std::bind(&defaultWriteCompleteCallBack, std::placeholders::_1));
-    TcpConnections_[newconn->getSockfd()] = newconn;
-    log(DEBUG, "Server", __LINE__, "newConnection end");
+void Server::removeConnection(TcpConnectionPtr Connection)
+{
+    TcpConnections_.erase(Connection->getSockfd());
 }
 
-void Server::start() {
-    log(DEBUG, "Server", __LINE__, "start begin");
+void Server::newConnection(int sockfd)
+{
+    log(INFO, "Server", __LINE__, "new Connection : ");
+    std::cout << "sockfd : " << sockfd << std::endl;
+    if (TcpConnections_.end() != TcpConnections_.find(sockfd))
+    {
+        auto newcon = TcpConnections_[sockfd];
+        static_cast<TcpConnectionPtr>(newcon)->renew();
+    }else {
+        TcpConnectionPtr newconn = std::shared_ptr<TcpConnection>(new TcpConnection(&loop_, sockfd));
+        newconn->setClosingCallBack(closingCallBack_);
+        newconn->setConnectionStatusCallBack(connectionStatusCallBack_);
+        newconn->setErrorCallBack(errorCallBack_);
+        newconn->setReadCompleteCallBack(readCompleteCallBack_);
+        newconn->setWriteCompleteCallBack(writeCompleteCallBack_);
+        TcpConnections_[newconn->getSockfd()] = newconn;
+    }
+}
+
+void Server::start()
+{
+    log(INFO, "Server", __LINE__, "start begin");
     loop_.loop();
-    log(DEBUG, "Server", __LINE__, "start end");
+    log(INFO, "Server", __LINE__, "start end");
 }
 
 Server::Server(int port, char *address) : accpetor_(&loop_, port, address), loop_()
 {
-    log(DEBUG, "Server", __LINE__, "constructor begin");
     accpetor_.setNewConnectionCallBack(std::bind(&Server::newConnection, this, std::placeholders::_1));
-    log(DEBUG, "Server", __LINE__, "constructor end");
+    readCompleteCallBack_ = defaultReadCompleteCallBack;
+    closingCallBack_ = defaultClosingCallBack;
+    connectionStatusCallBack_ = defalutConnectionStatusCallBack;
+    writeCompleteCallBack_ = defaultWriteCompleteCallBack;
+    errorCallBack_ = defaultErrorCallBack;
 }
+
+// void setReadCompleteCallBack(ReadCompleteCallBack cb) {
+
+// }
 
 Server::~Server()
 {
