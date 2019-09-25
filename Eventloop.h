@@ -9,6 +9,8 @@
 
 #include "Channel.h"
 #include "Poller.h"
+#include "ThreadPool.h"
+
 class Poller;
 class Channel;
 
@@ -32,6 +34,9 @@ private:
 
     // 具体执行poll的Poller
     Poller* poller_;
+
+    // 线程池
+    ThreadPool *pool_;
 
     // 当前活跃的Channels
     ChannelList activeChannels_;

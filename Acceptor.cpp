@@ -19,6 +19,7 @@ void Acceptor::handleRead()
             close(idlefd);
             idlefd = socket_.accept();
             close(idlefd);
+            printf("INFO 优雅关闭\n");
             idlefd = open("/dev/null", O_RDONLY);
         }
     }

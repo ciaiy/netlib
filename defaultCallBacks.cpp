@@ -2,6 +2,7 @@
 
 void defalutConnectionStatusCallBack(const TcpConnectionPtr &con)
 {
+
     std::cout << "connection status changed : " << std::endl;
 }
 

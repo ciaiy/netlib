@@ -9,10 +9,9 @@ Eventloop::Eventloop()
         eventHandling(false),
         quit_(false),
         doingPendingFunctor(false),
-        poller_(new Poller(this))
+        poller_(new Poller(this)),
+        pool_(new ThreadPool())
 {
-/*debug*/
- poller_->getchannels()[123] = nullptr;
 log(DEBUG, "Eventloop", __LINE__, "constructor complete");
 }
 
@@ -31,7 +30,7 @@ void Eventloop::loop()
         // event hand
         eventHandling = true;
         for(Channel *channel : activeChannels_) {
-            channel->handleEvent(); 
+            pool_->addTask(std::bind(&Channel::handleEvent, std::ref(channel))); 
         }
         eventHandling = false;
 
@@ -65,9 +64,7 @@ void Eventloop::dopendingFunctor() {
 }
 
 void Eventloop::updateChannel(Channel *channel) {
-log(DEBUG, "Eventloop", __LINE__, "updateChannel begin");
     poller_->updateChannel(channel);
-log(DEBUG, "Eventloop", __LINE__, "updateChannel end");
 }
 
 void Eventloop::removeChannel(Channel *channel) {

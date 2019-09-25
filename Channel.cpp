@@ -4,9 +4,7 @@
 #include <iostream>
 
 void Channel::update() {
-log(DEBUG, "channel", __LINE__, "update begin");
     loop_->updateChannel(this);
-log(DEBUG, "channel", __LINE__, "update end");
 }
 
 void Channel::remove() {
@@ -15,24 +13,23 @@ void Channel::remove() {
 
 void Channel::handleEvent()
 {
-    log(DEBUG, "Channel", __LINE__, "handleEvent begin");
     eventHanding_ = true;
     // 关闭连接
     // 等待验证是否为 !(revents_&EPOLLIN)
     if ((revents_ & EPOLLHUP ) || (revents_ & EPOLLRDHUP))
     {
 
-    log(DEBUG, "Channel", __LINE__, "handleEvent:closeCallBacks");
+        printf("DEBUG, Channel, fd : %d, closeCallBack\n", getFd());
         if (closeCallBack_)
         {
-            closeCallBack_();
+            loop_->addInPendingFunctors(std::bind(&Channel::closeCallBack_, this));
         }
         return ;
     }
 
     // 读数据到来
     if(revents_ & (EPOLLIN | EPOLLPRI)) {
-    log(DEBUG, "Channel", __LINE__, "handleEvent:readCallBacks");
+    printf("DEBUG, Channel, fd : %d, readCallBack\n", getFd());
         if(readCallBack_) {
             readCallBack_();
         }
@@ -41,7 +38,7 @@ void Channel::handleEvent()
 
     // 写数据到来
     if(revents_ & (EPOLLOUT)) {
-    log(DEBUG, "Channel", __LINE__, "handleEvent:ReadCallBacks");
+    printf("DEBUG, Channel, fd : %d, writeCallBack\n", getFd());    
         if(writeCallBack_) {
             writeCallBack_();
         }
@@ -50,7 +47,7 @@ void Channel::handleEvent()
 
     // 出错
     if(revents_ & EPOLLERR) {
-    log(DEBUG, "Channel", __LINE__, "handleEvent:ErrorCallBacks");
+    printf("DEBUG, Channel, fd : %d, errorCallBack\n", getFd());
         if(errorCallBack_) {
             errorCallBack_();
         }

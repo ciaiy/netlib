@@ -51,7 +51,7 @@ void Poller::poll(ChannelList *activeChannels_)
     }
     else
     {
-        // cout << "无事件发生" << endl;
+        cout << "无事件发生" << endl;
     }
 }
 
@@ -59,7 +59,6 @@ void Poller::fillactiveChannels(int eventnum, ChannelList *activeChannels_)
 {
     for (int i = 0; i < eventnum; i++)
     {
-        printf("type : DEBUG - revent[%d]:sockfd%d:%d\n", i,((Channel *)revents_[i].data.ptr)->getFd() ,revents_[i].events);
         Channel *channel = static_cast<Channel *>(revents_[i].data.ptr);
         int fd = channel->getFd();
         channels_[fd]->setRevents(revents_[i].events);
@@ -75,8 +74,6 @@ void Poller::updateChannel(Channel *channel)
     {
         if (channel->getStatus() == KNEW)
         {
-            log(DEBUG, "Poller", __LINE__, "已加入channels");
-            printf("\t channel fd = %d\n", channel->getFd());
             // 加入到channels_
             this->channels_[channel->getFd()] = channel;
         }
@@ -102,17 +99,16 @@ void Poller::updateChannel(Channel *channel)
 void Poller::removeChannel(Channel *channel)
 {
     // 从channels_中删除， 如果状态为已监听， 则删除epoll监听事件
-    channel->setStatus(KDELETED);
     channels_.erase(channel->getFd());
     if (channel->getStatus() == KADDED)
     {
         update(EPOLL_CTL_DEL, channel);
     }
+    channel->setStatus(KDELETED);
 }
 
 void Poller::update(int type, Channel *channel)
 {
-    printf("type : DEBUG - channel.sockfd = %d - channel.events = %d\n", channel->getFd(), channel->getEvents());
     struct epoll_event ev = {0};
     ev.events = channel->getEvents();
     ev.data.ptr = static_cast<void *>(channel);

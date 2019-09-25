@@ -1,0 +1,25 @@
+type : DEBUG - file : Eventloop - line : 15 - msg : constructor complete
+type : INFO - file : channel - line : 60 - msg : constructor complete
+type : DEBUG - file : acceptor - line : 33 - msg : constructor start
+type : DEBUG - file : Channel - line : 88 - msg : enableRead begin
+type : DEBUG - file : Channel - line : 92 - msg : enableRead end
+type : DEBUG - file : acceptor - line : 41 - msg : constructor end
+type : INFO - file : Server - line : 20 - msg : start begin
+有1个事件发生
+DEBUG, Channel, fd : 4, readCallBack
+type : DEBUG - newconfd = 6
+type : INFO - file : Server - line : 8 - msg : new Connection : 
+sockfd
+type : INFO - file : channel - line : 60 - msg : constructor complete
+type : DEBUG - file : Channel - line : 88 - msg : enableRead begin
+type : DEBUG - file : Channel - line : 92 - msg : enableRead end
+有1个事件发生
+DEBUG, Channel, fd : 6, readCallBack
+INFO, fd: 6, read_num = 100
+connection read finished
+有1个事件发生
+DEBUG, Channel, fd : 6, readCallBack
+ERROR, fd:6, read_num = 0
+WARNNING, fd:6, handleClose
+connection status changed : 
+connection closing

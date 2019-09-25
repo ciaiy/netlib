@@ -17,6 +17,8 @@ void TcpConnection::shutdown()
     channel_.disableAll();
     connectionStatusCallBack_(shared_from_this());
     closingCallBack_(shared_from_this());
+    close(this->getSockfd());
+    loop_->removeChannel(&channel_);
 }
 
 void TcpConnection::handleWrite()
@@ -83,17 +85,14 @@ void TcpConnection::send(char *buf, int len)
 
 void TcpConnection::handleRead()
 {
-    log(DEBUG, "TcpConnection", __LINE__, "handleRead");
     int read_num = readBuffer_.readFd(socket_.getSockfd());
-    printf("type : DEBUG - read_num = %d\n", read_num);
     if (read_num > 0)
     {
-        log(DEBUG, "TcpConnection", __LINE__, "readCompleteCallBacks begin");
+        printf("INFO, fd: %d, read_num = %d\n", getSockfd(), read_num);
         if (readCompleteCallBack_)
         {
             readCompleteCallBack_(shared_from_this());
         }
-        log(DEBUG, "TcpConnection", __LINE__, "readCompleteCallBacks end");
     }
     else if (read_num < 0)
     {
@@ -101,16 +100,31 @@ void TcpConnection::handleRead()
     }
     else
     {
-        handleClose();
+        printf("ERROR, fd:%d, read_num = 0\n", getSockfd());
+        loop_->addInPendingFunctors(bind(&TcpConnection::handleClose, this));
     }
 }
 
 void TcpConnection::handleClose()
 {
-    setConnectionStatus(KDisconnected);
-    channel_.disableAll();
+    printf("WARN, fd:%d, handleClose\n", getSockfd());
+    if (channel_.getStatus() != KDELETED)
+    {
+        setConnectionStatus(KDisconnected);
+        channel_.disableAll();
+        connectionStatusCallBack_(shared_from_this());
+        closingCallBack_(shared_from_this());
+        loop_->removeChannel(&channel_);
+        close(channel_.getFd());
+        printf("WARN has remove fd:%d\n", getSockfd());
+    }
+}
+
+void TcpConnection::renew() {
+    setConnectionStatus(KConnecting);
     connectionStatusCallBack_(shared_from_this());
-    closingCallBack_(shared_from_this());
+    channel_.setStatus(KNEW);
+    channel_.enableRead();
 }
 
 TcpConnection::TcpConnection(Eventloop *loop, int sockfd) : loop_(loop),
@@ -118,7 +132,6 @@ TcpConnection::TcpConnection(Eventloop *loop, int sockfd) : loop_(loop),
                                                             socket_(sockfd),
                                                             channel_(loop_, socket_.getSockfd())
 {
-    log(DEBUG, "TcpConnection", __LINE__, "constructor begin");
     channel_.setCloseCallBack(
         std::bind(&TcpConnection::handleClose, this));
     channel_.setErrorCallBack(
@@ -127,20 +140,17 @@ TcpConnection::TcpConnection(Eventloop *loop, int sockfd) : loop_(loop),
         std::bind(&TcpConnection::handleRead, this));
     channel_.setWriteCallBack(
         std::bind(&TcpConnection::handleWrite, this));
-    log(DEBUG, "TcpConnection", __LINE__, "channel set*CallBack complete");
     socket_.setKeepAlive(true);
     connectEstablished();
-    log(DEBUG, "TcpConnection", __LINE__, "constructor end");
 }
 
 void TcpConnection::connectEstablished()
 {
-    log(DEBUG, "TcpConnection", __LINE__, "connectionEstablished begin");
     setConnectionStatus(KConnected);
     channel_.enableRead();
     if (connectionStatusCallBack_)
     {
         connectionStatusCallBack_(shared_from_this());
     }
-    log(DEBUG, "TcpConnection", __LINE__, "connectionEstablished end");
+    printf("DEBUG, TcpConnection connectEstablished end\n");
 }

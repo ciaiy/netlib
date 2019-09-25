@@ -1,7 +1,5 @@
 #include "Socket.h"
 #include "SocketOps.h"
-/*debug*/
-#include <iostream>
 
 int Socket::write(char *buf, int len)
 {
@@ -46,7 +44,6 @@ Socket::Socket(int sockfd)
 
 Socket::Socket(int port, string address) : port_(port), address(address)
 {
-    log(DEBUG, "Socket", __LINE__, "constructor begin");
     addrlen_ = sizeof(myaddr_);
     myaddr_.sin_family = AF_INET;
     myaddr_.sin_port= htons(port);
@@ -70,7 +67,6 @@ Socket::Socket(int port, string address) : port_(port), address(address)
         perror("bind error");
         delete (this);
     }
-    log(DEBUG, "Socket", __LINE__, "constructor end");
 }
 
 Socket::~Socket()
