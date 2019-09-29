@@ -1,8 +1,14 @@
 #include "Socket.h"
 #include "SocketOps.h"
 
+string Socket::toString() {
+    printf("Socket::toString\nmy sockfd : %d\n", sockfd_);
+}
+
 int Socket::write(char *buf, int len)
 {
+    printf("Socket::write begin\n");
+    printf("Socket::write msg:%s, sockfd:%d, len:%d\n", buf, sockfd_, len);
     return socketopt::write(sockfd_, buf, len);
 }
 
@@ -71,5 +77,6 @@ Socket::Socket(int port, string address) : port_(port), address(address)
 
 Socket::~Socket()
 {
+    printf("INFO: ~Socket : %d\n", sockfd_);
     close(sockfd_);
 }

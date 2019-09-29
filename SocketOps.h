@@ -11,7 +11,8 @@ namespace socketopt
 {
 
 int write(int sockfd, char *buf, int len) {
-    return write(sockfd, buf, len);
+    printf("socketopt::write\n %s sockfd %d len;:%d\n", buf, sockfd, len);
+    ::write(sockfd, buf, len);
 }
 
 void setReusePort(int sockfd, bool set) {

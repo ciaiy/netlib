@@ -26,10 +26,11 @@ void Eventloop::loop()
         // poll
         activeChannels_.clear();  
         poller_->poll(&activeChannels_);
-
+        // printf("activeChaqnnels_.size = %d\n", activeChannels_.size());
         // event hand
         eventHandling = true;
         for(Channel *channel : activeChannels_) {
+            printf("Channel : %d addTask\n",channel->getFd(), channel->getEvents());
             pool_->addTask(std::bind(&Channel::handleEvent, std::ref(channel))); 
         }
         eventHandling = false;

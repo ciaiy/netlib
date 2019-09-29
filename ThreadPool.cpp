@@ -35,7 +35,6 @@ void ThreadPool::addTask(taskCallBack cb)
 {
     std::unique_lock<std::mutex> lock(mutex_);
     tasks_.push_back(cb);
-    /*test me : 当工作线程都在运行时, 可能会丢失任务*/
     cond_.notify_one();
 }
 

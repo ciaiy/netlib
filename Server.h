@@ -33,7 +33,10 @@ private:
     std::map<int, TcpConnectionPtr> TcpConnections_;
 public:
     Server(int port, char *address);
-    // void setNewConnectionCallBack(newConnectionCallBack cb);
+    void setReadCompleteCallBack(const ReadCompleteCallBack &cb);
+    void setClosingCallBack(ClosingCallBack cb);
+    void setConnectionStatusCallBack(ConnectionStatusCallBack cb);
+    void setWriteCompleteCallBack(WriteCompleteCallBack cb);
     void newConnection(int sockfd);
     void removeConnection(TcpConnectionPtr Connection);
     void start();

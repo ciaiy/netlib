@@ -51,7 +51,7 @@ void Poller::poll(ChannelList *activeChannels_)
     }
     else
     {
-        cout << "无事件发生" << endl;
+        // cout << "无事件发生" << endl;
     }
 }
 

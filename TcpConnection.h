@@ -22,7 +22,7 @@ private:
     int connectionStatus;
     bool isReading_;
     bool isWriting_;
-
+    
     Buffer readBuffer_;
     Buffer writeBuffer_;
 
@@ -41,15 +41,21 @@ private:
     void handleWrite();
     void handleClose();
 
+public:
+
     void shutdown();
     void send(char *buf, int len);
-
-public:
     void setConnectionStatus(int status);
     void connectEstablished();
     void handleError();
     /* 加重新使用该fd的Channel加入到poller里 */
     void renew();
+    Buffer *getReadBuffer() {
+        return &readBuffer_;
+    }
+    Buffer *getWriteBuffer() {
+        return &writeBuffer_;
+    }
     TcpConnection(Eventloop *loop, int sockfd);
     ~TcpConnection(){};
 

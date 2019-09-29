@@ -13,7 +13,12 @@ void Channel::remove() {
 
 void Channel::handleEvent()
 {
-    eventHanding_ = true;
+    // 防止多线程同时操作同一socket, 出现不可预知的错误
+    // test me :  是否还会出现竞争? 是否需要互斥量  // 正在尝试加入互斥量
+    if(isEventHanding()) {
+        return;
+    }
+
     // 关闭连接
     // 等待验证是否为 !(revents_&EPOLLIN)
     if ((revents_ & EPOLLHUP ) || (revents_ & EPOLLRDHUP))

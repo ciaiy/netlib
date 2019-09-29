@@ -33,7 +33,7 @@ public:
     void setNonblock(bool set = true);
     void setKeepAlive(bool set);
     void setReuseAddr(bool set = true);
-
+    string toString();
     int write(char *buf, int len);
 
     int getSockfd();

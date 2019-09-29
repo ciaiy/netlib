@@ -1,5 +1,22 @@
 #include "Server.h"
 
+void Server::setClosingCallBack(ClosingCallBack cb) {
+    closingCallBack_ = cb;
+}
+
+void Server::setReadCompleteCallBack(const ReadCompleteCallBack& cb) {
+    printf("\033[40;31m %p \n\033[0m", this);
+    readCompleteCallBack_ = cb;
+}
+
+void Server::setConnectionStatusCallBack(ConnectionStatusCallBack cb) {
+    connectionStatusCallBack_ = cb;
+}
+
+void Server::setWriteCompleteCallBack(WriteCompleteCallBack cb) {
+    writeCompleteCallBack_ = cb;
+}
+
 void Server::removeConnection(TcpConnectionPtr Connection)
 {
     TcpConnections_.erase(Connection->getSockfd());
@@ -9,6 +26,7 @@ void Server::newConnection(int sockfd)
 {
     log(INFO, "Server", __LINE__, "new Connection : ");
     std::cout << "sockfd : " << sockfd << std::endl;
+    printf("\033[40;31m %p \n\033[0m", this);
     if (TcpConnections_.end() != TcpConnections_.find(sockfd))
     {
         auto newcon = TcpConnections_[sockfd];
@@ -40,10 +58,6 @@ Server::Server(int port, char *address) : accpetor_(&loop_, port, address), loop
     writeCompleteCallBack_ = defaultWriteCompleteCallBack;
     errorCallBack_ = defaultErrorCallBack;
 }
-
-// void setReadCompleteCallBack(ReadCompleteCallBack cb) {
-
-// }
 
 Server::~Server()
 {

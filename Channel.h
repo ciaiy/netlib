@@ -3,7 +3,7 @@
 
 #include <functional>
 #include <sys/epoll.h>
-
+#include <mutex>
 #include "Eventloop.h"
 #include "logger.h"
 
@@ -67,12 +67,12 @@ public:
 
     bool isReading()
     {
-        return status_ & EPOLLIN;
+        return events_ & EPOLLIN;
     }
 
     bool isWriting()
     {
-        return status_ & EPOLLOUT;
+        return events_ & EPOLLOUT;
     }
 
     // 开关读写函数
@@ -87,7 +87,7 @@ public:
     {
         log(DEBUG, "Channel", __LINE__, "enableRead begin");
         events_ |= EPOLLIN;
-        events_ |= EPOLLET;
+
         update();
         log(DEBUG, "Channel", __LINE__, "enableRead end");
     }
