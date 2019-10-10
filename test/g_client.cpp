@@ -18,12 +18,15 @@ int main(void) {
     printf("sockfd = %d \n", sockfd);
     int num = 0;
     char msg[10];
-    for(num = 0; num < 100; num++) {
+    for(num = 0; num < 1000; num++) {
         bzero(msg, 10);
         sprintf(msg, "%d", num);
         int write_num = write(sockfd, msg, strlen(msg));  
         printf("pid : %d write %d bytes\n", getpid(), write_num);
 //        sleep(1);
+	char temp[64];
+	int recv_num = read(sockfd, temp, 64);
+	printf("recv %dbytes\n", recv_num);
     }
     close(sockfd);
     return 0;

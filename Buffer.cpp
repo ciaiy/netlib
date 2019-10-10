@@ -77,8 +77,7 @@ void Buffer::append(char *extrabuf, int len)
     std::copy(extrabuf, extrabuf + len, begin() + Index_);
 }
 
-Buffer::Buffer(int initSize)
-    : buffer_(initSize),
+Buffer::Buffer():
       Index_(0)
 {
 }

@@ -12,7 +12,7 @@ Eventloop::Eventloop()
         poller_(new Poller(this)),
         pool_(new ThreadPool())
 {
-log(DEBUG, "Eventloop", __LINE__, "constructor complete");
+// log(DEBUG, "Eventloop", __LINE__, "constructor complete");
 }
 
 Eventloop::~Eventloop() {}
@@ -30,8 +30,9 @@ void Eventloop::loop()
         // event hand
         eventHandling = true;
         for(Channel *channel : activeChannels_) {
-            printf("Channel : %d addTask\n",channel->getFd(), channel->getEvents());
-            pool_->addTask(std::bind(&Channel::handleEvent, std::ref(channel))); 
+            // printf("Channel : %d addTask\n",channel->getFd(), channel->getEvents());
+            // pool_->addTask(std::bind(&Channel::handleEvent, std::ref(channel))); 
+            channel->handleEvent();
         }
         eventHandling = false;
 

@@ -42,7 +42,7 @@ void Poller::poll(ChannelList *activeChannels_)
     }
     if (eventnum > 0)
     {
-        cout << "有" << eventnum << "个事件发生" << endl;
+        // cout << "有" << eventnum << "个事件发生" << endl;
         fillactiveChannels(eventnum, activeChannels_);
         if (eventnum == revents_.size())
         {

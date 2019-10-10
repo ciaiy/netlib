@@ -43,6 +43,9 @@ private:
     // epoll要监听的事件类型
     unsigned int events_;
 
+//  互斥量
+std::mutex mutex_;
+
     // 回调函数
     readCallBack readCallBack_;
     writeCallBack writeCallBack_;

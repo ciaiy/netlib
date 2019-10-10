@@ -18,7 +18,7 @@ void defaultReadCompleteCallBack(const TcpConnectionPtr &con)
 
 void defaultWriteCompleteCallBack(const TcpConnectionPtr &con)
 {
-    std::cout << "connection write finished" << std::endl;
+    // std::cout << "connection write finished" << std::endl;
 }
 
 void defaultErrorCallBack()

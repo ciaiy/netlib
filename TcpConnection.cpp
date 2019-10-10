@@ -13,18 +13,24 @@ void TcpConnection::handleError()
 
 void TcpConnection::shutdown()
 {
-    setConnectionStatus(KDisconnected);
-    channel_.disableAll();
-    connectionStatusCallBack_(shared_from_this());
-    closingCallBack_(shared_from_this());
-    close(this->getSockfd());
-    loop_->removeChannel(&channel_);
+    // printf("shutdown\n");
+    setConnectionStatus(KDisconnecting);
+
+    if(!channel_.isWriting()) {
+        handleClose();
+    }
+    // channel_.disableAll();
+    // connectionStatusCallBack_(shared_from_this());
+    // closingCallBack_(shared_from_this());
+    // close(this->getSockfd());
+    // loop_->removeChannel(&channel_);
 }
 
 void TcpConnection::handleWrite()
 {
-    printf("INFO, handleWrite writable bytes : %d\n", writeBuffer_.writableBytes());
-    perror("--write test begin");
+    // printf("INFO, handleWrite writable bytes : %d\n", writeBuffer_.writableBytes());
+    // perror("--write test begin");
+
     if (channel_.isWriting())
     {
         int write_num = 0;
@@ -32,7 +38,7 @@ void TcpConnection::handleWrite()
         {
             write_num = socket_.write(writeBuffer_.begin() + writeBuffer_.getWriteIndex(), writeBuffer_.writableBytes());
             writeBuffer_.hasWrite(write_num);
-            printf("** has write : %d\n", write_num);
+            // printf("** has write : %d\n", write_num);
         }
 
         if(write_num == -1) {
@@ -41,14 +47,18 @@ void TcpConnection::handleWrite()
 
         if (writeBuffer_.writableBytes() == 0)
         {
+            writeBuffer_.clearBuffer();
             if (writeCompleteCallBack_)
             {
-                writeBuffer_.clearBuffer();
                 writeCompleteCallBack_(shared_from_this());
             }
             channel_.disableWrite();
         }
 
+    }
+    // printf("getstatus = %d   writableBytes = %d\n", channel_.getStatus(), writeBuffer_.writableBytes());
+    if(getConnectionStatus() == KDisconnecting && writeBuffer_.writableBytes() == 0) {
+        handleClose();
     }
 }
 
@@ -56,7 +66,7 @@ void TcpConnection::send(char *buf, int len)
 {
     int write_num = 0;
     int remain_num = len - writeBuffer_.getSize();
-    printf("sendmsg : %s, len :%d\n", buf, len);
+    // printf("sendmsg : %s, len :%d\n", buf, len);
     // if (KDisconnected)
     // {
     //     return;
@@ -102,7 +112,7 @@ void TcpConnection::handleRead()
     int read_num = readBuffer_.readFd(socket_.getSockfd());
     if (read_num > 0)
     {
-        printf("INFO, fd: %d, read_num = %d\n", getSockfd(), read_num);
+        // printf("INFO, fd: %d, read_num = %d\n", getSockfd(), read_num);
         if (readCompleteCallBack_)
         {
             readCompleteCallBack_(shared_from_this());
@@ -124,9 +134,6 @@ void TcpConnection::handleClose()
     printf("WARN, fd:%d, handleClose\n", getSockfd());
     if (getConnectionStatus() != KDisconnected)
     {
-        while (!channel_.isReading() && !channel_.isWriting())
-        {
-        };
         setConnectionStatus(KDisconnected);
         channel_.disableAll();
         connectionStatusCallBack_(shared_from_this());
@@ -134,7 +141,7 @@ void TcpConnection::handleClose()
         loop_->removeChannel(&channel_);
         close(channel_.getFd());
         channel_.setStatus(KDELETED);
-        printf("WARN has remove fd:%d\n", getSockfd());
+        // printf("WARN has remove fd:%d\n", getSockfd());
     }
 }
 
@@ -171,5 +178,5 @@ void TcpConnection::connectEstablished()
     {
         connectionStatusCallBack_(shared_from_this());
     }
-    printf("DEBUG, TcpConnection connectEstablished end\n");
+    // printf("DEBUG, TcpConnection connectEstablished end\n");
 }

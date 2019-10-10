@@ -16,7 +16,7 @@ private:
 
 
 public:
-    Buffer(int initSize = 1024 * 4);
+    Buffer();
     char *begin();
     
     /* 读了n个字节 */
