@@ -22,13 +22,13 @@ void Channel::handleEvent()
 
     // 关闭连接
     // 等待验证是否为 !(revents_&EPOLLIN)
+    std::cout << fd_ << "::"<<std::this_thread::get_id() << ":::::" << loop_<< std::endl;
     if ((revents_ & EPOLLHUP ) || (revents_ & EPOLLRDHUP))
     {
 
         // printf("DEBUG, Channel, fd : %d, closeCallBack\n", getFd());
         if (closeCallBack_)
         {
-            std::cout<<getStatus()<<std::endl;
             closeCallBack_();
         }
         return ;

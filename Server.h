@@ -6,6 +6,7 @@
 #include "TcpConnection.h"
 #include "defaultCallBacks.h"
 #include "logger.h"
+#include "EventloopThreadPool.h"
 
 #include <map>
 #include <iostream>
@@ -30,6 +31,7 @@ private:
     WriteCompleteCallBack writeCompleteCallBack_;
     errorCallBack errorCallBack_;
 
+    EventloopThreadPool eventloopThreadpool_;
     std::map<int, TcpConnectionPtr> TcpConnections_;
 public:
     Server(int port, char *address);

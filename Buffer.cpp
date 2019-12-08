@@ -31,7 +31,6 @@ int Buffer::readFd(int fd)
     int read_num = 0;
     int iovcnt = (readableBytes() < sizeof(extraBuf) ? 2 : 1);
     read_num = readv(fd, vec, iovcnt);
-    printf("------------------------read:%d\n", read_num);
     if (read_num < 0)
     {
 
@@ -70,9 +69,7 @@ void Buffer::append(char *extrabuf, int len)
     if (len > buffer_.size() - Index_)
     {
         int old_size = buffer_.size();
-        printf("old_size = %d new_size = %d\n", old_size, old_size + len);
         buffer_.resize(old_size + len);
-        printf("now buffer_.size = %ld\n", buffer_.size());
     }
     std::copy(extrabuf, extrabuf + len, begin() + Index_);
 }

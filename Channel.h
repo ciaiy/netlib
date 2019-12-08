@@ -60,10 +60,9 @@ public:
           events_(0),
           status_(KNEW)
     {
-        log(INFO, "channel", __LINE__, "constructor complete");
     };
 
-    ~Channel() {log(INFO, "channel", __LINE__, "destructor complete");}
+    ~Channel() {}
     void handleEvent();
     void remove();
     void update();
@@ -88,11 +87,9 @@ public:
 
     void enableRead()
     {
-        log(DEBUG, "Channel", __LINE__, "enableRead begin");
         events_ |= EPOLLIN;
 
         update();
-        log(DEBUG, "Channel", __LINE__, "enableRead end");
     }
 
     void disableRead()

@@ -51,7 +51,7 @@ void Bind(int sockfd, struct sockaddr *addr, socklen_t len)
 
 int Accept(int sockfd, struct sockaddr *addr, socklen_t *len)
 {
-    int ret_value = accept(sockfd, addr, len);
+    int ret_value = accept4(sockfd, addr, len, SOCK_NONBLOCK|SOCK_CLOEXEC);
     if (ret_value == -1)
     {
         perror("accept error");

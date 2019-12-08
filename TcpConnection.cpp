@@ -96,7 +96,7 @@ void TcpConnection::send(char *buf, int len)
     {
         writeBuffer_.append(buf, remain_num);
     }
-    printf("writeBuffer_.size:%d writeBuffer_.getIndex:%d\n", writeBuffer_.getSize(), writeBuffer_.getWriteIndex());
+    // printf("writeBuffer_.size:%d writeBuffer_.getIndex:%d\n", writeBuffer_.getSize(), writeBuffer_.getWriteIndex());
     if (!channel_.isWriting())
     {
         channel_.enableWrite();
@@ -124,14 +124,15 @@ void TcpConnection::handleRead()
     }
     else
     {
-        printf("ERROR, fd:%d, read_num = 0\n", getSockfd());
-        loop_->addInPendingFunctors(bind(&TcpConnection::handleClose, this));
+        // printf("ERROR, fd:%d, read_num = 0\n", getSockfd());
+        //loop_->addInPendingFunctors(bind(&TcpConnection::handleClose, this));
+        handleClose();
     }
 }
 
 void TcpConnection::handleClose()
 {
-    printf("WARN, fd:%d, handleClose\n", getSockfd());
+    // printf("WARN, fd:%d, handleClose\n", getSockfd());
     if (getConnectionStatus() != KDisconnected)
     {
         setConnectionStatus(KDisconnected);

@@ -7,8 +7,6 @@ string Socket::toString() {
 
 int Socket::write(char *buf, int len)
 {
-    printf("Socket::write begin\n");
-    printf("Socket::write msg:%s, sockfd:%d, len:%d\n", buf, sockfd_, len);
     return socketopt::write(sockfd_, buf, len);
 }
 
@@ -61,7 +59,7 @@ Socket::Socket(int port, string address) : port_(port), address(address)
         delete (this);
     }
 
-    sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
+    sockfd_ = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
     if (sockfd_ == -1)
     {
         perror("socket error");
@@ -77,6 +75,5 @@ Socket::Socket(int port, string address) : port_(port), address(address)
 
 Socket::~Socket()
 {
-    printf("INFO: ~Socket : %d\n", sockfd_);
     close(sockfd_);
 }

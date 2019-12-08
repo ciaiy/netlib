@@ -9,8 +9,7 @@ Eventloop::Eventloop()
         eventHandling(false),
         quit_(false),
         doingPendingFunctor(false),
-        poller_(new Poller(this)),
-        pool_(new ThreadPool())
+        poller_(new Poller(this))
 {
 // log(DEBUG, "Eventloop", __LINE__, "constructor complete");
 }
@@ -21,7 +20,6 @@ void Eventloop::loop()
 {
     looping_ = true;
     quit_ = true;
-
     while (quit_) {
         // poll
         activeChannels_.clear();  

@@ -5,7 +5,6 @@ using namespace std;
 void readCompleteCallBack(const TcpConnectionPtr &con) {
     // cout << con->getReadBuffer()->begin()  << ":::::" << con->getReadBuffer()->getSize() << endl;
     if(con->getReadBuffer()->getReadIndex() != con->getReadBuffer()->getSize()) {
-        printf("!=\n");
         exit(-1);
     }
 

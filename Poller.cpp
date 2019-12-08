@@ -20,10 +20,6 @@ Poller::Poller(Eventloop *loop_)
     {
         perror("in Poller()");
     }
-    
-    
-    
-    
 }
 
 Poller::~Poller()
@@ -114,7 +110,8 @@ void Poller::update(int type, Channel *channel)
     ev.data.ptr = static_cast<void *>(channel);
     int ret_value = epoll_ctl(epollfd_, type, channel->getFd(), &ev);
     if(ret_value == -1) {
-        log(ERROR, "Poller", __LINE__, "error");
+        log(ERROR, "Poller", __LINE__, "?????");
+        std::cout << epollfd_ << endl;
         perror("epoll_ctl");
     }
 }
