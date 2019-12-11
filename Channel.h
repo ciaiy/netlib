@@ -62,7 +62,7 @@ public:
     {
     };
 
-    ~Channel() {}
+    ~Channel() {log("ERROR", "Channel", __LINE__, "channel destructor" , fd_);}
     void handleEvent();
     void remove();
     void update();

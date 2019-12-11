@@ -20,6 +20,7 @@ Poller::Poller(Eventloop *loop_)
     {
         perror("in Poller()");
     }
+    log("INFO", "Poller", __LINE__, "Poller construct", epollfd_, loop_);
 }
 
 Poller::~Poller()
@@ -57,6 +58,7 @@ void Poller::fillactiveChannels(int eventnum, ChannelList *activeChannels_)
     {
         Channel *channel = static_cast<Channel *>(revents_[i].data.ptr);
         int fd = channel->getFd();
+        log("DEBUG", "Poller", __LINE__, "fillactiveChannels", epollfd_, "channelfd", fd);
         channels_[fd]->setRevents(revents_[i].events);
         activeChannels_->push_back(channel);
     }
@@ -95,7 +97,7 @@ void Poller::updateChannel(Channel *channel)
 void Poller::removeChannel(Channel *channel)
 {
     // 从channels_中删除， 如果状态为已监听， 则删除epoll监听事件
-    channels_.erase(channel->getFd());
+    // channels_.erase(channel->getFd());
     if (channel->getStatus() == KADDED)
     {
         update(EPOLL_CTL_DEL, channel);
@@ -105,13 +107,13 @@ void Poller::removeChannel(Channel *channel)
 
 void Poller::update(int type, Channel *channel)
 {
+    log("INFO", "Poller", __LINE__, "Poller update", "epoll_fd", epollfd_, "type", type, "channelfd", channel->getFd(), "events", channel->getEvents(), "status:", channel->getStatus(), "thread", std::this_thread::get_id());    
     struct epoll_event ev = {0};
     ev.events = channel->getEvents();
     ev.data.ptr = static_cast<void *>(channel);
     int ret_value = epoll_ctl(epollfd_, type, channel->getFd(), &ev);
     if(ret_value == -1) {
-        log(ERROR, "Poller", __LINE__, "?????");
-        std::cout << epollfd_ << endl;
+    log("ERROR", "Poller", __LINE__, "Poller update", "epoll_fd", epollfd_, "type", type, "channelfd", channel->getFd(), "events", channel->getEvents(), "status:", channel->getStatus(), "thread", std::this_thread::get_id());
         perror("epoll_ctl");
     }
 }

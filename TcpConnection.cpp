@@ -135,6 +135,7 @@ void TcpConnection::handleClose()
     // printf("WARN, fd:%d, handleClose\n", getSockfd());
     if (getConnectionStatus() != KDisconnected)
     {
+        log("DEBUG", "TcpConnection", __LINE__, "channelfd:", channel_.getFd());
         setConnectionStatus(KDisconnected);
         channel_.disableAll();
         connectionStatusCallBack_(shared_from_this());
@@ -148,8 +149,8 @@ void TcpConnection::handleClose()
 
 void TcpConnection::renew()
 {
+    log("INFO", "TcpConnection", __LINE__, "renew", channel_.getFd(), "status", channel_.getStatus());
     connectionStatusCallBack_(shared_from_this());
-    channel_.setStatus(KNEW);
     channel_.enableRead();
     setConnectionStatus(KConnected);
 }

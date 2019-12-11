@@ -22,7 +22,7 @@ void Channel::handleEvent()
 
     // 关闭连接
     // 等待验证是否为 !(revents_&EPOLLIN)
-    std::cout << fd_ << "::"<<std::this_thread::get_id() << ":::::" << loop_<< std::endl;
+    log("INFO", "Channel", __LINE__, "channelfd:", fd_,"recive event:", revents_);
     if ((revents_ & EPOLLHUP ) || (revents_ & EPOLLRDHUP))
     {
 

@@ -12,7 +12,9 @@ EventloopThread::EventloopThread(const ThreadInitCallBack&cb,
                                 mutex_(),
                                 cond_(),
                                 callback_(cb)
-{}
+{
+    loop_ = new Eventloop();
+}
 
 EventloopThread::~EventloopThread() {
     exiting_ = true;
@@ -27,29 +29,30 @@ EventloopThread::~EventloopThread() {
 
 Eventloop* EventloopThread::startLoop() {
     thread_ = new std::thread(std::bind(&EventloopThread::threadFunc, this));
-    Eventloop* loop = NULL;
-    {
-        std::unique_lock<std::mutex> lock(mutex_);
-        while(loop_ == NULL) {
-            cond_.wait(lock);
-        }
-        loop = loop_;
-    }
-    return loop;
+    return loop_;
+    // Eventloop* loop = NULL;
+    // {
+    //     std::unique_lock<std::mutex> lock(mutex_);
+    //     while(loop_ == NULL) {
+    //         cond_.wait(lock);
+    //     }
+    //     loop = loop_;
+    // }
+    // return loop;
 }
 
 void EventloopThread::threadFunc() {
         std::cout << "start loop : " << std::this_thread::get_id() << std::endl;
-    Eventloop loop;
     if(callback_) {
-        callback_(&loop);
+        callback_(loop_);
     }
-    {
-        std::unique_lock<std::mutex> lock(mutex_);
-        loop_ = &loop;
-        cond_.notify_one();
-    }
-    loop.loop();
-    std::unique_lock<std::mutex> lock(mutex_);
-    loop_ = NULL;
+    loop_->loop();
+    // {
+    //     std::unique_lock<std::mutex> lock(mutex_);
+    //     loop_ = &loop;
+    //     cond_.notify_one();
+    // }
+    // loop.loop();
+    // std::unique_lock<std::mutex> lock(mutex_);
+    // loop_ = NULL;
 }

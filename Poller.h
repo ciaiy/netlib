@@ -11,7 +11,7 @@
 
 #include "Eventloop.h"
 #include "Channel.h"
-
+#include "logger.cpp"
 
 class Channel;
 class Eventloop;

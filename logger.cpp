@@ -1,16 +1,10 @@
-#include "logger.h"
-
-void log(int type, char *file, int line, char *msg) {
-    std::string s_type;
-    if(type == DEBUG) {
-        s_type = "DEBUG"; 
-    }else if(type == INFO) {
-        s_type = "INFO";
-    }else if(type == WARNNING) {
-        s_type = "WARNNING";
-    }else if(type == ERROR) {
-        s_type = "ERROR";
-    }
-
-    std::cout << "type : "<<s_type<<" - file : " << file << " - line : " << line << " - msg : " << msg << std::endl;
+#include "logger.h" 
+template<typename T> 
+void log(T t) {
+    std::cout << t << std::endl;
+}
+template<typename T, typename... Args>
+void log(T t, Args... args) {
+    std::cout << t << " ";
+    log(args...);
 }
