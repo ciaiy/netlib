@@ -33,6 +33,7 @@ public:
     void setNonblock(bool set = true);
     void setKeepAlive(bool set);
     void setReuseAddr(bool set = true);
+    void setReusePort(bool sert = true);
     string toString();
     int write(char *buf, int len);
 

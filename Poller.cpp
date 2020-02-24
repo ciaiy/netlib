@@ -70,11 +70,11 @@ void Poller::updateChannel(Channel *channel)
     // 未被epoll监听的channel（新的/被删除的）
     if (channel->getStatus() == KNEW || channel->getStatus() == KDELETED)
     {
-        if (channel->getStatus() == KNEW)
-        {
+        //if (channel->getStatus() == KNEW)
+        //{
             // 加入到channels_
             this->channels_[channel->getFd()] = channel;
-        }
+        //}
         channel->setStatus(KADDED);
         update(EPOLL_CTL_ADD, channel);
     }
@@ -85,19 +85,19 @@ void Poller::updateChannel(Channel *channel)
             // 删除epoll监听事件
             update(EPOLL_CTL_DEL, channel);
             channel->setStatus(KDELETED);
+            channels_.erase(channel->getFd());
         }
         else
         {
             update(EPOLL_CTL_MOD, channel);
-
         }
     }
 }
 
 void Poller::removeChannel(Channel *channel)
 {
-    // 从channels_中删除， 如果状态为已监听， 则删除epoll监听事件
-    // channels_.erase(channel->getFd());
+    // 如果状态为已监听， 则删除epoll监听事件
+    channels_.erase(channel->getFd());
     if (channel->getStatus() == KADDED)
     {
         update(EPOLL_CTL_DEL, channel);
@@ -107,6 +107,7 @@ void Poller::removeChannel(Channel *channel)
 
 void Poller::update(int type, Channel *channel)
 {
+    // 将event加入到epoll监听中
     log("INFO", "Poller", __LINE__, "Poller update", "epoll_fd", epollfd_, "type", type, "channelfd", channel->getFd(), "events", channel->getEvents(), "status:", channel->getStatus(), "thread", std::this_thread::get_id());    
     struct epoll_event ev = {0};
     ev.events = channel->getEvents();
@@ -114,6 +115,6 @@ void Poller::update(int type, Channel *channel)
     int ret_value = epoll_ctl(epollfd_, type, channel->getFd(), &ev);
     if(ret_value == -1) {
     log("ERROR", "Poller", __LINE__, "Poller update", "epoll_fd", epollfd_, "type", type, "channelfd", channel->getFd(), "events", channel->getEvents(), "status:", channel->getStatus(), "thread", std::this_thread::get_id());
-        perror("epoll_ctl");
+    perror("epoll_ctl233333");
     }
 }

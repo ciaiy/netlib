@@ -36,6 +36,10 @@ void Socket::setNonblock(bool set)
     socketopt::setNonblock(sockfd_, set);
 }
 
+void Socket::setReusePort(bool set) {
+    socketopt::setReusePort(sockfd_, set);
+}
+
 void Socket::setKeepAlive(bool set)
 {
     socketopt::setKeepAlive(sockfd_, set);

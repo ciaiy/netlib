@@ -36,6 +36,7 @@ Acceptor::Acceptor(Eventloop *loop, int port, string address)
         perror("idlefd open error");
     }
     socket_.listen();
+    socket_.setReusePort();
     channel_.setReadCallBack(std::bind(&Acceptor::handleRead, this));
     channel_.enableRead();
     log(DEBUG, "acceptor", __LINE__, "constructor end");

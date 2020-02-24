@@ -28,7 +28,6 @@ void EventloopThreadPool::start(const ThreadInitCallBack& cb) {
 }
 
 Eventloop* EventloopThreadPool::getNextLoop() {
-    //std::cout << "EventloopThreadPool::getNextloop start" << started_ <<std::endl;
     Eventloop* loop = baseLoop_;
     if(!loops_.empty()) {
         loop = loops_[next_];

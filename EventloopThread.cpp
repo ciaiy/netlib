@@ -30,15 +30,6 @@ EventloopThread::~EventloopThread() {
 Eventloop* EventloopThread::startLoop() {
     thread_ = new std::thread(std::bind(&EventloopThread::threadFunc, this));
     return loop_;
-    // Eventloop* loop = NULL;
-    // {
-    //     std::unique_lock<std::mutex> lock(mutex_);
-    //     while(loop_ == NULL) {
-    //         cond_.wait(lock);
-    //     }
-    //     loop = loop_;
-    // }
-    // return loop;
 }
 
 void EventloopThread::threadFunc() {
@@ -47,12 +38,4 @@ void EventloopThread::threadFunc() {
         callback_(loop_);
     }
     loop_->loop();
-    // {
-    //     std::unique_lock<std::mutex> lock(mutex_);
-    //     loop_ = &loop;
-    //     cond_.notify_one();
-    // }
-    // loop.loop();
-    // std::unique_lock<std::mutex> lock(mutex_);
-    // loop_ = NULL;
 }
