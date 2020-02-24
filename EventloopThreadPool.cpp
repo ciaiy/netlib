@@ -5,7 +5,7 @@ EventloopThreadPool::EventloopThreadPool(Eventloop* baseLoop, const std::string&
   : baseLoop_(baseLoop),
     name_(nameArg),
     started_(false),
-    numThreads_(4),
+    numThreads_(0),
     next_(0)
 {
     start();

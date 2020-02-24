@@ -108,13 +108,11 @@ void Poller::removeChannel(Channel *channel)
 void Poller::update(int type, Channel *channel)
 {
     // 将event加入到epoll监听中
-    log("INFO", "Poller", __LINE__, "Poller update", "epoll_fd", epollfd_, "type", type, "channelfd", channel->getFd(), "events", channel->getEvents(), "status:", channel->getStatus(), "thread", std::this_thread::get_id());    
     struct epoll_event ev = {0};
     ev.events = channel->getEvents();
     ev.data.ptr = static_cast<void *>(channel);
     int ret_value = epoll_ctl(epollfd_, type, channel->getFd(), &ev);
     if(ret_value == -1) {
-    log("ERROR", "Poller", __LINE__, "Poller update", "epoll_fd", epollfd_, "type", type, "channelfd", channel->getFd(), "events", channel->getEvents(), "status:", channel->getStatus(), "thread", std::this_thread::get_id());
     perror("epoll_ctl233333");
     }
 }

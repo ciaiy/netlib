@@ -8,7 +8,7 @@ Eventloop::Eventloop()
     :   looping_(false),
         eventHandling(false),
         quit_(false),
-        doingPendingFunctor(false),
+        // doingPendingFunctor(false),
         poller_(new Poller(this))
 {
 // log(DEBUG, "Eventloop", __LINE__, "constructor complete");
@@ -24,20 +24,16 @@ void Eventloop::loop()
         // poll
         activeChannels_.clear();  
         poller_->poll(&activeChannels_);
-        // printf("activeChaqnnels_.size = %d\n", activeChannels_.size());
-        // event hand
         eventHandling = true;
         for(Channel *channel : activeChannels_) {
-            // printf("Channel : %d addTask\n",channel->getFd(), channel->getEvents());
-            // pool_->addTask(std::bind(&Channel::handleEvent, std::ref(channel))); 
             channel->handleEvent();
         }
         eventHandling = false;
 
-        // do pending functor
-        doingPendingFunctor = true;
-        dopendingFunctor();
-        doingPendingFunctor = false;
+        // // do pending functor
+        // doingPendingFunctor = true;
+        // dopendingFunctor();
+        // doingPendingFunctor = false;
     }
 }
 
@@ -45,23 +41,23 @@ void Eventloop::quit() {
     quit_ = false;
 }
 
-void Eventloop::addInPendingFunctors(Functor cb) {
-    lock_guard<std::mutex> lock(mutex_);
-    pendingFunctors_.push_back(std::move(cb));
-}
+// void Eventloop::addInPendingFunctors(Functor cb) {
+//     lock_guard<std::mutex> lock(mutex_);
+//     pendingFunctors_.push_back(std::move(cb));
+// }
 
-void Eventloop::dopendingFunctor() {
-    std::vector<Functor> functors;
+// void Eventloop::dopendingFunctor() {
+//     std::vector<Functor> functors;
     
-    {
-        lock_guard<std::mutex> lock(mutex_);
-        functors.swap(pendingFunctors_);
-    }
+//     {
+//         lock_guard<std::mutex> lock(mutex_);
+//         functors.swap(pendingFunctors_);
+//     }
 
-    for(const Functor& functor : functors) {
-        functor();
-    }
-}
+//     for(const Functor& functor : functors) {
+//         functor();
+//     }
+// }
 
 void Eventloop::updateChannel(Channel *channel) {
     poller_->updateChannel(channel);

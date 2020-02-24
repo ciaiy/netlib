@@ -9,7 +9,6 @@
 
 #include "Channel.h"
 #include "Poller.h"
-#include "ThreadPool.h"
 
 class Poller;
 class Channel;
@@ -18,15 +17,15 @@ class Eventloop
 {
 private:
     /* data */
-    typedef std::function<void ()> Functor;
+    // typedef std::function<void ()> Functor;
     typedef std::vector<Channel *> ChannelList;
     
     // 正在looping
     bool looping_;
     // 正在处理事件
     bool eventHandling;
-    // 正在执行挂起函数
-    bool doingPendingFunctor;
+    // // 正在执行挂起函数
+    // bool doingPendingFunctor;
     // 退出loop
     bool quit_;
     // 互斥量
@@ -38,8 +37,8 @@ private:
 
     // 当前活跃的Channels
     ChannelList activeChannels_;
-    // 挂起的函数
-    std::vector<Functor> pendingFunctors_;
+    // // 挂起的函数
+    // std::vector<Functor> pendingFunctors_;
 
 public:
     Eventloop(/* args */);
@@ -55,10 +54,10 @@ bool isLooping();
     void updateChannel(Channel *channel);
     // 移除Channel
     void removeChannel(Channel *channel);
-    // 执行挂起函数
-    void dopendingFunctor();
-    // 加入挂起函数等待队列
-    void addInPendingFunctors(Functor cb);
+    // // 执行挂起函数
+    // void dopendingFunctor();
+    // // 加入挂起函数等待队列
+    // void addInPendingFunctors(Functor cb);
 };
 
 

@@ -116,6 +116,7 @@ void TcpConnection::renew()
     log("INFO", "TcpConnection", __LINE__, "renew", channel_.getFd(), "status", channel_.getStatus());
     connectionStatusCallBack_(shared_from_this());
     channel_.enableRead();
+    socket_.setNonblock(true);
     setConnectionStatus(KConnected);
 }
 
@@ -133,6 +134,7 @@ TcpConnection::TcpConnection(Eventloop *loop, int sockfd) : loop_(loop),
     channel_.setWriteCallBack(
         std::bind(&TcpConnection::handleWrite, this));
     socket_.setKeepAlive(true);
+    socket_.setNonblock(true);
     connectEstablished();
 }
 
