@@ -1,2 +1,2 @@
-testServer :   ../Acceptor.* ../Channel.* ../Socket.* ../Poller.* ../Eventloop.* ../Buffer.* ../TcpConnection.* testServer.cpp ../logger.* ../Server.* ../defaultCallBacks.*  ../EventloopThread*
-	g++ ../Channel.* ../Acceptor.* ../Socket.* ../Poller.* ../Eventloop.* ../Buffer.* ../TcpConnection.* testServer.cpp ../logger.* ../Server.* ../defaultCallBacks.*  ../EventloopThread* -o testServer -lpthread -std=c++11
+testServer :   ../src/Acceptor.* ../src/Channel.* ../src/Socket.* ../src/Poller.* ../src/Eventloop.* ../src/Buffer.* ../src/TcpConnection.* testServer.cpp ../src/logger.* ../src/Server.* ../src/defaultCallBacks.*  ../src/EventloopThread*
+	g++ ../src/Channel.* ../src/Acceptor.* ../src/Socket.* ../src/Poller.* ../src/Eventloop.* ../src/Buffer.* ../src/TcpConnection.* testServer.cpp ../src/logger.* ../src/Server.* ../src/defaultCallBacks.*  ../src/EventloopThread* -o testServer -lpthread -std=c++11

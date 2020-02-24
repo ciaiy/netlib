@@ -69,6 +69,8 @@ Socket::Socket(int port, string address) : port_(port), address(address)
         perror("socket error");
         delete (this);
     }
+    this->setReusePort(true);
+    this->setReuseAddr(true);
     ret_value = bind(sockfd_, (struct sockaddr *)&myaddr_, addrlen_);
     if (ret_value == -1)
     {

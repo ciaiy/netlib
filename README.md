@@ -1,30 +1,11 @@
 # netlib
 轻量级网络协议库
 
-## 使用方法:
-提供回调函数来实现业务逻辑
+## 运行逻辑
+![状态流转图](状态流转图.png)
 
- - ConnectionStatusCallBack ``状态更改回调函数``
-    
-    当连接的socket状态更改时,会执行此回调函数
 
- - ClosingCallBack ``socket关闭回调函数``
-
-    当socket即将关闭时, 会执行次回调函数, 可以用于进行注销用户等功能
-
- - ReadCompleteCallBack ``读结束回调函数``
-
-    当读完Socket的数据之后, 会执行此回调函数, 可以用于处理数据等功能
-
- - WriteCompleteCallBack ``写结束回调函数``
-
-    当服务器给socket写完数据之后, 会执行此回调函数, 可以用于记录发送数据日志等功能
-
- - ErrorCallBack ``出错回调函数``
-
-    当出现错误时, 会执行此回调函数, 默认忽略, 如有需要, 可以记录出错信息
-
-## Netlib主要组成部分
+## 主要组成部分
 
 #### Eventloop:
 
@@ -50,12 +31,46 @@ Eventloop的成员，使用``epoll``来负责具体的IO多路复用. 并且提�
 
 负责着整个服务器的启动和终止, 并在此注册回调函数.
 
+## 使用方法:
+提供回调函数来实现业务逻辑
+
+ - ConnectionStatusCallBack ``状态更改回调函数``
+    
+    当连接的socket状态更改时,会执行此回调函数
+
+ - ClosingCallBack ``socket关闭回调函数``
+
+    当socket即将关闭时, 会执行次回调函数, 可以用于进行注销用户等功能
+
+ - ReadCompleteCallBack ``读结束回调函数``
+
+    当读完Socket的数据之后, 会执行此回调函数, 可以用于处理数据等功能
+
+ - WriteCompleteCallBack ``写结束回调函数``
+
+    当服务器给socket写完数据之后, 会执行此回调函数, 可以用于记录发送数据日志等功能
+
+ - ErrorCallBack ``出错回调函数``
+
+    当出现错误时, 会执行此回调函数, 默认忽略, 如有需要, 可以记录出错信息
+
+使用make可以生成用例
+
 ## 性能
+Concurrency Level:      20
 
-吞吐量: 30000-40000 request per second
+Time taken for tests:   3.339 seconds
 
-硬件: MacBook Pro (13-inch, 2018, Four Thunderbolt 3 Ports)
+Complete requests:      100000
 
-系统: 4.15.0-30deepin-generic
+Failed requests:        0
 
-测试时间:
+Requests per second:    29953.30 [#/sec] (mean)
+
+Time per request:       0.033 [ms] (mean, across all concurrent requests)
+
+Device: MacBook Pro (13-inch, 2018, Four Thunderbolt 3 Ports)
+
+System: 4.15.0-30deepin-generic
+
+Time: 2019/12/01
