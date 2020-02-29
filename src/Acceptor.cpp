@@ -45,7 +45,6 @@ Acceptor::Acceptor(Eventloop *loop, int port, string address)
 Acceptor::~Acceptor()
 {
     channel_.disableAll();
-    channel_.remove();
     close(idlefd);
 }
 

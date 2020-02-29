@@ -5,6 +5,10 @@ string Socket::toString() {
     printf("Socket::toString\nmy sockfd : %d\n", sockfd_);
 }
 
+void Socket::Shutdown() {
+    socketopt::Shutdown(sockfd_);
+}
+
 int Socket::write(char *buf, int len)
 {
     return socketopt::write(sockfd_, buf, len);
@@ -36,10 +40,6 @@ void Socket::setNonblock(bool set)
     socketopt::setNonblock(sockfd_, set);
 }
 
-void Socket::setReusePort(bool set) {
-    socketopt::setReusePort(sockfd_, set);
-}
-
 void Socket::setKeepAlive(bool set)
 {
     socketopt::setKeepAlive(sockfd_, set);
@@ -69,7 +69,6 @@ Socket::Socket(int port, string address) : port_(port), address(address)
         perror("socket error");
         delete (this);
     }
-    this->setReusePort(true);
     this->setReuseAddr(true);
     ret_value = bind(sockfd_, (struct sockaddr *)&myaddr_, addrlen_);
     if (ret_value == -1)

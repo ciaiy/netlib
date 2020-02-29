@@ -15,12 +15,8 @@ int write(int sockfd, char *buf, int len) {
     ::write(sockfd, buf, len);
 }
 
-void setReusePort(int sockfd, bool set) {
-    int optval = set ? 1 : 0;
-    int ret_value = setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval));
-    if(ret_value == -1) {
-        perror("set reuse port error");
-    }
+void Shutdown(int sockfd) {
+    shutdown(sockfd, SHUT_RDWR);
 }
 
 void setReuseAddr(int sockfd, bool set) {

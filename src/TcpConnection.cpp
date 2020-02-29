@@ -13,17 +13,9 @@ void TcpConnection::handleError()
 
 void TcpConnection::shutdown()
 {
-    // printf("shutdown\n");
-    setConnectionStatus(KDisconnecting);
-
-    if(!channel_.isWriting()) {
-        handleClose();
-    }
-    // channel_.disableAll();
-    // connectionStatusCallBack_(shared_from_this());
-    // closingCallBack_(shared_from_this());
-    // close(this->getSockfd());
-    // loop_->removeChannel(&channel_);
+    // shutdown并不能关闭文件描述符， 
+    socket_.Shutdown();
+    handleClose();
 }
 
 void TcpConnection::handleWrite()
@@ -107,7 +99,6 @@ void TcpConnection::handleClose()
         channel_.disableAll();
         connectionStatusCallBack_(shared_from_this());
         closingCallBack_(shared_from_this());
-        //loop_->removeChannel(&channel_);
         close(channel_.getFd());
 }
 
